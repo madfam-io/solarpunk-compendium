@@ -1009,6 +1009,288 @@ The goal isn't to conquer winter but to move through it with intention, maintain
 			order: 5
 		},
 		{
+			slug: 'biophilic-design-guide',
+			title: 'Biophilic Design for Your Home',
+			subtitle: 'Bringing nature indoors for health and harmony',
+			excerpt:
+				'Biophilic design integrates natural elements into built environments, improving wellbeing, air quality, and our connection to the living world.',
+			content: `# Biophilic Design for Your Home
+
+We evolved surrounded by nature—forests, rivers, open skies. Our bodies and minds are calibrated for natural environments. Yet most of us spend 90% of our time indoors, in spaces designed for efficiency rather than human flourishing.
+
+Biophilic design bridges this gap, intentionally integrating natural elements into buildings to support health, productivity, and wellbeing. The science is clear: spaces with biophilic elements reduce stress, improve cognitive function, accelerate healing, and increase happiness.
+
+## The Science of Biophilia
+
+"Biophilia" means love of life. The biophilia hypothesis, developed by biologist E.O. Wilson, suggests humans have an innate need to connect with other living things—a need shaped by millions of years of evolution.
+
+**Research shows biophilic design:**
+- Reduces cortisol (stress hormone) levels by up to 15%
+- Improves cognitive performance by 6-12%
+- Speeds hospital patient recovery by 8-10%
+- Increases workplace productivity and satisfaction
+- Lowers blood pressure and heart rate
+- Improves air quality and humidity
+
+These aren't aesthetic preferences—they're physiological responses embedded in our biology.
+
+## The 14 Patterns of Biophilic Design
+
+Researchers have identified 14 patterns that create meaningful nature connections. Here's how to apply them at home:
+
+### Direct Nature Connection
+
+**1. Visual Connection with Nature**
+Having plants, water, or animals visible from regular living spaces.
+
+*Practical applications:*
+- Position seating to face windows with outdoor views
+- Create indoor gardens or plant collections in living areas
+- Add an aquarium or indoor pond
+- Install a bird feeder visible from commonly used rooms
+
+**2. Non-Visual Connection with Nature**
+Sounds, smells, textures, and tastes that remind us of nature.
+
+*Practical applications:*
+- Open windows for natural sounds and airflow
+- Use natural scents (real flowers, herbs, essential oils)
+- Incorporate textures like stone, wood, wool, linen
+- Grow herbs and edibles for the taste connection
+
+**3. Non-Rhythmic Sensory Stimuli**
+Random, unpredictable natural movements that briefly capture attention.
+
+*Practical applications:*
+- Wind-responsive elements (mobiles, curtains, plants)
+- Moving water features
+- Visible flames (fireplace, candles)
+- Windows overlooking active outdoor areas
+
+**4. Thermal and Airflow Variability**
+Subtle changes in temperature and air movement mimicking outdoor conditions.
+
+*Practical applications:*
+- Open windows strategically for cross-ventilation
+- Allow some seasonal temperature variation
+- Use ceiling fans for gentle air movement
+- Create microclimates (cooler sleeping areas, warmer gathering spaces)
+
+**5. Presence of Water**
+Visual, auditory, or tactile water experiences.
+
+*Practical applications:*
+- Small fountains or water features
+- Aquariums or indoor ponds
+- Rain chains visible from windows
+- Shower/bath design emphasizing water experience
+
+**6. Dynamic and Diffuse Light**
+Varying light intensities and patterns that change with time and weather.
+
+*Practical applications:*
+- Maximize natural daylight
+- Use sheer curtains for diffused light
+- Create dappled light with plants or screens
+- Install skylights or light tubes
+- Allow light to move through spaces during the day
+
+**7. Connection with Natural Systems**
+Awareness of seasonal, ecological, and natural processes.
+
+*Practical applications:*
+- Views of weather, seasons, and time of day
+- Visible food growing (windowsill herbs, sprouts)
+- Composting systems
+- Rain collection visible from inside
+- Clocks and calendars emphasizing natural cycles
+
+### Indirect Nature Connection
+
+**8. Biomorphic Forms and Patterns**
+Shapes and patterns found in nature, incorporated into design.
+
+*Practical applications:*
+- Organic-shaped furniture and objects
+- Patterns inspired by leaves, shells, fractals
+- Curved rather than angular forms
+- Textiles with botanical or natural patterns
+
+**9. Material Connection with Nature**
+Natural materials that reflect local ecology and geology.
+
+*Practical applications:*
+- Exposed wood (structural or decorative)
+- Stone and tile from natural sources
+- Natural fiber textiles (wool, cotton, linen, hemp)
+- Clay, ceramics, and earthen elements
+- Leather and other animal-derived materials (ethically sourced)
+
+**10. Complexity and Order**
+Rich sensory information organized in a coherent spatial pattern.
+
+*Practical applications:*
+- Collections displayed with visual rhythm
+- Layered textures and materials with unifying theme
+- Details that reward closer inspection
+- Balance of variety and coherence
+
+### Space Configuration
+
+**11. Prospect**
+Unimpeded views over distance for surveillance and planning.
+
+*Practical applications:*
+- Windows with distant views
+- Open floor plans with sight lines
+- Elevated seating areas
+- Balconies and upper floors
+
+**12. Refuge**
+Protective, enclosed spaces for rest and withdrawal.
+
+*Practical applications:*
+- Reading nooks and window seats
+- Canopy beds or alcoves
+- Lowered ceilings in intimate areas
+- Cozy corners with overhead shelter
+
+**13. Mystery**
+Promise of more information, drawing us further in.
+
+*Practical applications:*
+- Partially obscured views that invite exploration
+- Curved pathways that don't reveal everything
+- Light from unseen sources
+- Varying ceiling heights and room proportions
+
+**14. Risk/Peril**
+Identifiable threat with reliable safeguard.
+
+*Practical applications:*
+- Heights with secure railings
+- Fire contained in fireplace
+- Views of dramatic weather from protected spaces
+- Play structures for children
+
+## Starting Your Biophilic Retrofit
+
+You don't need to renovate. Start with these high-impact, low-cost interventions:
+
+### Indoor Plants (Immediate Impact)
+
+**Air-purifying champions:**
+- Snake plant (Sansevieria) - extremely low maintenance
+- Pothos - trails beautifully, tolerates low light
+- Spider plant - produces oxygen, removes toxins
+- Peace lily - flowers in low light
+- Rubber plant - striking foliage
+
+**Create plant layers:**
+- Floor plants (fiddle leaf fig, monstera)
+- Table plants (succulents, herbs)
+- Hanging plants (pothos, string of pearls)
+- Wall-mounted plants (air plants, mounted ferns)
+
+**Living walls (DIY options):**
+- Pocket planters on wall-mounted fabric
+- Vertical pallet gardens
+- Modular wall-mounted pot systems
+- Moss walls (preserved or living)
+
+### Natural Materials
+
+**Replace synthetic with natural:**
+- Cotton or linen bedding instead of polyester
+- Wool rugs instead of synthetic
+- Wood cutting boards and utensils
+- Ceramic dishes instead of plastic
+- Natural fiber curtains
+
+**Add natural elements:**
+- Driftwood, stones, shells from outdoor adventures
+- Woven baskets for storage
+- Cork boards and accessories
+- Bamboo in bathroom and kitchen
+
+### Light and Views
+
+**Maximize daylight:**
+- Remove heavy curtains, use sheer alternatives
+- Keep windows clean
+- Place mirrors to reflect natural light deeper
+- Paint walls in light, warm colors
+- Trim outdoor vegetation blocking windows
+
+**Frame your views:**
+- Arrange furniture to face windows
+- Remove visual clutter from window areas
+- Add window boxes for closer nature
+- Hang prisms or crystals for light play
+
+### Water Features
+
+**Simple additions:**
+- Tabletop fountain (under $50)
+- Glass vase with floating plants
+- Fish bowl or small aquarium
+- Bowl of water with floating flowers
+
+### Sound
+
+**Natural soundscape:**
+- Open windows when possible
+- Wind chimes (tuned to pleasant notes)
+- Small water features
+- Bird feeders near windows to attract birdsong
+
+## Room-by-Room Guide
+
+**Living Room:**
+- Large floor plants as focal points
+- Natural fiber rug and cushions
+- Seating facing windows/garden
+- Fire (real or high-quality electric)
+
+**Bedroom:**
+- Plants that release oxygen at night (orchids, succulents, snake plant)
+- Natural fiber bedding
+- Views of sky or trees from bed
+- Refuge elements (canopy, low lighting)
+
+**Kitchen:**
+- Herb garden on windowsill or under grow lights
+- Natural stone or wood counters
+- Views of outdoor food production
+- Water sounds (even from running tap, mindfully)
+
+**Bathroom:**
+- Humidity-loving plants (fern, pothos, tillandsia)
+- Natural stone and wood elements
+- Skylight or frosted window for daylight
+- Rainfall showerhead for water experience
+
+**Home Office:**
+- Plants within view while working
+- Position desk to face window if possible
+- Natural materials on desk surface
+- Dynamic daylight rather than constant artificial
+
+## The Deeper Practice
+
+Biophilic design isn't just about adding plants and wood. At its heart, it's about remembering that we are part of nature, not separate from it. Our homes can remind us of this fundamental truth.
+
+As you make changes, notice how you feel. Pay attention to which spaces draw you in and which ones repel. Follow your biological intuition—it knows what environments support your flourishing.
+
+Over time, a biophilic home becomes a living system, changing with seasons, growing and adapting. The boundary between inside and outside softens. You find yourself more attuned to weather, seasons, and the living world beyond your walls.
+
+This is the solarpunk vision made personal: homes that connect us to nature rather than isolating us from it, buildings that support not just survival but genuine thriving.`,
+			author: 'Elena Mori',
+			readTime: 14,
+			section: 'BUILD',
+			order: 7
+		},
+		{
 			slug: 'seed-saving-fundamentals',
 			title: 'Seed Saving Fundamentals',
 			subtitle: "Closing the loop on your garden's lifecycle",
@@ -1152,7 +1434,7 @@ Start small. Save seeds from one crop this year. Next year, add another. Within 
 			author: 'Sara Martinez',
 			readTime: 13,
 			section: 'GROW',
-			order: 6
+			order: 8
 		}
 	];
 
