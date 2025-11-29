@@ -22,7 +22,7 @@
 			description: 'Plan your garden with a calendar based on your location and last frost date.',
 			icon: '🌱',
 			category: 'Garden',
-			status: 'coming_soon'
+			status: 'available'
 		},
 		{
 			slug: 'community-asset-mapper',
@@ -38,7 +38,7 @@
 			description: 'Size your rainwater collection system based on roof area and local rainfall.',
 			icon: '💧',
 			category: 'Water',
-			status: 'coming_soon'
+			status: 'available'
 		},
 		{
 			slug: 'energy-audit',
