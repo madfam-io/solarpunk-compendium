@@ -1,0 +1,204 @@
+# Enclii Deployment Configuration
+# The Solarpunk Almanac - Web Application
+# https://github.com/madfam-io/enclii
+
+name: solarpunk-almanac
+description: "The Solarpunk Almanac - Practical wisdom for regenerative living"
+
+# Service definitions
+services:
+  web:
+    # Build configuration
+    build:
+      builder: nixpacks  # Auto-detects Node.js/SvelteKit
+      node_version: "20"
+      build_command: "npm run build"
+
+    # Runtime configuration
+    port: 3000
+    command: "node build"
+
+    # Scaling
+    replicas: 2
+    autoscale:
+      enabled: true
+      min_replicas: 2
+      max_replicas: 10
+      target_cpu: 70
+      target_memory: 80
+
+    # Resource limits
+    resources:
+      memory:
+        min: 256Mi
+        max: 512Mi
+      cpu:
+        min: 100m
+        max: 500m
+
+    # Health checks
+    healthcheck:
+      path: /
+      port: 3000
+      interval: 30s
+      timeout: 5s
+      failure_threshold: 3
+      success_threshold: 1
+
+    # Readiness probe
+    readiness:
+      path: /
+      initial_delay: 10s
+      period: 10s
+
+    # Environment variables (non-secret)
+    env:
+      NODE_ENV: production
+      LOG_LEVEL: info
+      PUBLIC_SITE_NAME: "The Solarpunk Almanac"
+
+    # Secrets (stored securely in Enclii)
+    secrets:
+      - DATABASE_URL
+      - JANUA_API_URL
+      - JANUA_API_SECRET
+      - RESEND_API_KEY
+      - REDIS_URL
+
+# Database service (PostgreSQL via Ubicloud)
+databases:
+  main:
+    type: postgresql
+    version: "15"
+    size: small  # 1 vCPU, 2GB RAM, 20GB storage
+    backups:
+      enabled: true
+      schedule: "0 3 * * *"  # Daily at 3 AM
+      retention: 7  # Keep 7 days
+
+# Redis for caching
+caches:
+  redis:
+    type: redis
+    version: "7"
+    size: small
+    persistence: false  # Ephemeral cache
+
+# Domains and routing
+domains:
+  - hostname: almanac.solar
+    routes:
+      - path: /
+        service: web
+        port: 3000
+    tls:
+      issuer: production  # Let's Encrypt
+      auto_renew: true
+
+  - hostname: www.almanac.solar
+    redirect_to: almanac.solar
+
+# Ingress configuration
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+  rate_limit:
+    enabled: true
+    requests_per_minute: 100
+    burst: 50
+
+# CI/CD Pipeline
+pipeline:
+  # Preview environments for PRs
+  preview:
+    enabled: true
+    auto_deploy: true
+    ttl: 7d  # Auto-cleanup after 7 days
+
+  # Staging (develop branch)
+  staging:
+    branch: develop
+    auto_deploy: true
+    domain: staging.almanac.solar
+
+  # Production (main branch)
+  production:
+    branch: main
+    auto_deploy: false  # Require manual approval
+    approval_required: true
+
+# Monitoring and logging
+observability:
+  metrics:
+    enabled: true
+    provider: prometheus
+    scrape_interval: 15s
+
+  logging:
+    enabled: true
+    retention: 30d
+    level: info
+
+  alerts:
+    - name: high-error-rate
+      condition: "error_rate > 5%"
+      duration: 5m
+      severity: critical
+      notify:
+        - slack
+        - email
+
+    - name: high-latency
+      condition: "p95_latency > 2s"
+      duration: 10m
+      severity: warning
+
+# Backup configuration
+backups:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM UTC
+  retention:
+    daily: 7
+    weekly: 4
+    monthly: 3
+  storage:
+    provider: cloudflare-r2
+    bucket: solarpunk-almanac-backups
+
+# Security settings
+security:
+  # Container security
+  run_as_non_root: true
+  read_only_root_filesystem: true
+
+  # Network policies
+  network_policies:
+    enabled: true
+    allow_egress:
+      - janua.madfam.io  # Auth service
+      - api.resend.com   # Email
+      - "*.r2.cloudflarestorage.com"  # Object storage
+
+  # Secrets encryption
+  secrets_encryption: true
+
+  # Pod security
+  pod_security_policy: restricted
+
+# Resource quotas (per environment)
+quotas:
+  development:
+    cpu: 2
+    memory: 4Gi
+    storage: 50Gi
+
+  staging:
+    cpu: 4
+    memory: 8Gi
+    storage: 100Gi
+
+  production:
+    cpu: 16
+    memory: 32Gi
+    storage: 500Gi

@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { user, isAuthenticated, userInitials, auth } from '$lib/stores/auth';
 	import ThemeToggle from './ThemeToggle.svelte';
 	import SeasonIndicator from './SeasonIndicator.svelte';
 
 	let mobileMenuOpen = false;
+	let userMenuOpen = false;
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
@@ -16,6 +18,11 @@
 	function isActive(href: string): boolean {
 		if (href === '/') return $page.url.pathname === '/';
 		return $page.url.pathname.startsWith(href);
+	}
+
+	async function handleSignOut() {
+		userMenuOpen = false;
+		await auth.signOut('/');
 	}
 </script>
 
@@ -49,11 +56,79 @@
 				<SeasonIndicator />
 				<ThemeToggle />
 
-				<!-- Auth buttons (for logged out users) -->
-				<div class="hidden sm:flex items-center gap-2">
-					<a href="/login" class="btn-ghost text-sm">Log in</a>
-					<a href="/signup" class="btn-primary text-sm">Sign up</a>
-				</div>
+				{#if $isAuthenticated && $user}
+					<!-- Authenticated user menu -->
+					<div class="relative">
+						<button
+							on:click={() => userMenuOpen = !userMenuOpen}
+							class="flex items-center gap-2 p-1 rounded-lg hover:bg-slate-800/50 transition-colors"
+						>
+							{#if $user.avatar}
+								<img
+									src={$user.avatar}
+									alt={$user.firstName || $user.email}
+									class="w-8 h-8 rounded-full object-cover"
+								/>
+							{:else}
+								<div class="w-8 h-8 rounded-full bg-solarpunk-teal/20 text-solarpunk-teal flex items-center justify-center text-sm font-medium">
+									{$userInitials}
+								</div>
+							{/if}
+							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 hidden sm:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="m6 9 6 6 6-6"/>
+							</svg>
+						</button>
+
+						{#if userMenuOpen}
+							<!-- Dropdown menu -->
+							<div class="absolute right-0 mt-2 w-56 glass rounded-lg shadow-xl border border-white/10 py-2">
+								<div class="px-4 py-2 border-b border-slate-700">
+									<p class="text-sm font-medium truncate">
+										{$user.firstName ? `${$user.firstName} ${$user.lastName || ''}` : $user.email}
+									</p>
+									<p class="text-xs text-slate-500 truncate">{$user.email}</p>
+								</div>
+
+								<a
+									href="/profile"
+									on:click={() => userMenuOpen = false}
+									class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800/50 hover:text-slate-100"
+								>
+									Your Profile
+								</a>
+								<a
+									href="/settings"
+									on:click={() => userMenuOpen = false}
+									class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800/50 hover:text-slate-100"
+								>
+									Settings
+								</a>
+								<a
+									href="/directory/submit"
+									on:click={() => userMenuOpen = false}
+									class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800/50 hover:text-slate-100"
+								>
+									Submit Project
+								</a>
+
+								<hr class="border-slate-700 my-2" />
+
+								<button
+									on:click={handleSignOut}
+									class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10"
+								>
+									Sign out
+								</button>
+							</div>
+						{/if}
+					</div>
+				{:else}
+					<!-- Auth buttons (for logged out users) -->
+					<div class="hidden sm:flex items-center gap-2">
+						<a href="/login" class="btn-ghost text-sm">Log in</a>
+						<a href="/signup" class="btn-primary text-sm">Sign up</a>
+					</div>
+				{/if}
 
 				<!-- Mobile menu button -->
 				<button
@@ -89,10 +164,42 @@
 						{item.label}
 					</a>
 				{/each}
+
 				<hr class="border-slate-800 my-4" />
-				<a href="/login" class="block px-4 py-3 text-slate-400 hover:text-slate-100">Log in</a>
-				<a href="/signup" class="block px-4 py-3 btn-primary text-center">Sign up</a>
+
+				{#if $isAuthenticated && $user}
+					<div class="px-4 py-2 mb-2">
+						<p class="text-sm font-medium">{$user.firstName || $user.email}</p>
+						<p class="text-xs text-slate-500">{$user.email}</p>
+					</div>
+					<a href="/profile" on:click={() => mobileMenuOpen = false} class="block px-4 py-3 text-slate-400 hover:text-slate-100">
+						Your Profile
+					</a>
+					<a href="/settings" on:click={() => mobileMenuOpen = false} class="block px-4 py-3 text-slate-400 hover:text-slate-100">
+						Settings
+					</a>
+					<button
+						on:click={handleSignOut}
+						class="block w-full text-left px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg"
+					>
+						Sign out
+					</button>
+				{:else}
+					<a href="/login" on:click={() => mobileMenuOpen = false} class="block px-4 py-3 text-slate-400 hover:text-slate-100">
+						Log in
+					</a>
+					<a href="/signup" on:click={() => mobileMenuOpen = false} class="block px-4 py-3 btn-primary text-center">
+						Sign up
+					</a>
+				{/if}
 			</div>
 		</div>
 	{/if}
 </nav>
+
+<!-- Click outside to close menus -->
+<svelte:window on:click={(e) => {
+	if (userMenuOpen && !(e.target as HTMLElement).closest('.relative')) {
+		userMenuOpen = false;
+	}
+}} />
