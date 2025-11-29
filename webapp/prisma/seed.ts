@@ -466,156 +466,185 @@ We believe the futures we imagine are the futures we create. Our art is propagan
 	console.log('Creating sample edition...');
 
 	const edition = await prisma.edition.upsert({
-		where: { slug: 'fall-2025' },
+		where: { slug: 'winter-solstice-2025' },
 		update: {},
 		create: {
-			slug: 'fall-2025',
-			title: 'Harvest & Preserve',
-			season: 'FALL',
+			slug: 'winter-solstice-2025',
+			title: 'The Seed Edition',
+			season: 'WINTER',
 			year: 2025,
-			tagline: 'Abundance through community resilience',
+			tagline: 'The return of the light',
 			description:
-				'This edition focuses on the abundance of fall—harvesting, preserving, and building community resilience for the seasons ahead.',
+				'Our inaugural edition launches on the Winter Solstice—the darkest day, when the light begins its return. A fitting moment to plant seeds for regenerative futures.',
 			status: 'PUBLISHED',
-			publishedAt: new Date('2025-09-22')
+			publishedAt: new Date('2025-12-21')
 		}
 	});
 
-	// Complete articles for Fall 2025
+	// Articles for Winter Solstice 2025 - The Seed Edition
 	const articlesData = [
 		{
-			slug: 'welcome-fall-2025',
-			title: 'Welcome to Fall 2025',
-			subtitle: 'A season of abundance and preparation',
+			slug: 'the-return-of-the-light',
+			title: 'The Return of the Light',
+			subtitle: 'Welcome to The Solarpunk Almanac',
 			excerpt:
-				'As the days shorten and the harvest comes in, we turn our attention to preservation, community building, and preparing for the quieter months ahead.',
-			content: `# Welcome to Fall 2025
+				'On the darkest day of the year, we launch something new—a quarterly publication dedicated to the practical work of building regenerative futures.',
+			content: `# The Return of the Light
 
-As the September equinox passes, we enter a season of profound transition. The abundance of summer reaches its peak, offering one last burst of productivity before the quiet of winter arrives.
+Today is the Winter Solstice. The shortest day. The longest night. And from this moment forward, the light returns.
 
-## The Rhythm of the Season
+There's no better day to begin.
 
-Fall has always been a time of reckoning—of tallying the year's growth and preparing for scarcity. Our ancestors knew this rhythm intimately, and though many of us have lost touch with seasonal living, the pattern remains encoded in our cultures and our bodies.
+## Why We're Here
 
-This edition of The Solarpunk Almanac honors that rhythm while looking forward. We explore how traditional practices of preservation and preparation can combine with modern technology and community organizing to build genuine resilience.
+The Solarpunk Almanac exists because we believe the future is something we build, not something that happens to us. While mainstream culture oscillates between techno-utopianism and climate despair, a global movement is quietly doing the work: planting food forests, forming housing cooperatives, installing community solar, repairing what's broken, and reimagining what's possible.
 
-## What You'll Find Inside
+This movement has many names. Transition Towns. Degrowth. Regenerative design. Appropriate technology. Commons-based economics. We call it solarpunk—not because the name matters, but because it captures something essential: the marriage of ecological wisdom and technological possibility, wrapped in stubborn, radical hope.
 
-**GROW**: From fermentation fundamentals to seed saving, we cover the skills needed to extend the harvest through winter and prepare for next year's growing season.
+## What You'll Find Here
 
-**BUILD**: As temperatures drop, we focus on passive solar retrofits, weatherization, and thermal mass—keeping warm without burning fossil fuels.
+The Almanac is published quarterly, aligned with the solstices and equinoxes. Each edition offers:
 
-**POWER**: Fall's longer nights mean more reliance on stored energy. We examine battery systems, load management, and the art of living well with less.
+**GROW** — Food sovereignty, from soil health to seed saving. Urban farms, food forests, and fermentation. Growing abundance in any space.
 
-**CONNECT**: Community resilience starts with knowing your neighbors. This section covers mutual aid networks, skill shares, and building the social infrastructure for hard times.
+**BUILD** — Sustainable shelter and infrastructure. Passive solar, natural building, repair culture. Creating comfort with minimal footprint.
 
-**THRIVE**: Seasonal affective challenges are real. We explore light therapy, indoor gardening, and practices that maintain well-being through darker months.
+**POWER** — Energy democracy and appropriate technology. Solar, wind, micro-hydro—and the wisdom to use less.
 
-**CREATE**: Fall festivals, harvest celebrations, and the art of intentional rest. Plus solarpunk fiction exploring autumn themes.
+**CONNECT** — Community resilience and mutual aid. Mapping your neighborhood, building networks, organizing for change.
 
-**LEARN**: Workshops, courses, and resources to deepen your skills during the indoor season ahead.
+**THRIVE** — Wellbeing in alignment with natural rhythms. Seasonal practices, ancestral wisdom, and modern insights for flourishing.
 
-## A Note on Abundance
+**CREATE** — Art, stories, and culture that imagine regenerative futures. Because we can't build what we can't envision.
 
-Solarpunk isn't about scarcity. It's about recognizing that true abundance comes not from infinite consumption but from living in right relationship with natural cycles. Fall teaches us this lesson every year: the harvest is finite, but with wisdom and planning, it can sustain us through to the next growing season.
+**LEARN** — Skills, workshops, and resources. The ongoing education that resilient living requires.
 
-Let's learn together.
+## The Seed Edition
 
-*— The Almanac Team*`,
+This inaugural issue is intentionally compact—a seed, not a harvest. We offer a foundation: an introduction to solarpunk philosophy, practical guides you can use immediately, and a preview of what's to come.
+
+In March, with the Spring Equinox, we'll publish our first full quarterly edition. The growing season begins.
+
+## An Invitation
+
+The Almanac is open infrastructure. We're building in public, sharing freely, and inviting participation. Submit your project to our directory. Contribute to future editions. Start a local chapter. Use what's useful.
+
+The work of building regenerative futures doesn't wait for permission. It's happening now, in communities around the world. The Almanac exists to connect, amplify, and support that work.
+
+The light returns today. Let's grow something.
+
+*— The Solarpunk Almanac Team*
+*Winter Solstice, 2025*`,
 			author: 'Almanac Team',
 			readTime: 5,
 			section: 'OVERVIEW',
 			order: 1
 		},
 		{
-			slug: 'fermentation-fundamentals',
-			title: 'Fermentation Fundamentals',
-			subtitle: 'Transform seasonal abundance into year-round nutrition',
+			slug: 'what-is-solarpunk',
+			title: 'What is Solarpunk?',
+			subtitle: 'A movement for regenerative futures',
 			excerpt:
-				'Learn the ancient art of fermentation to preserve the harvest while boosting nutrition and flavor.',
-			content: `# Fermentation Fundamentals
+				'Solarpunk is more than an aesthetic—it\'s a vision of futures where technology and nature work together, and where communities build the world they want to live in.',
+			content: `# What is Solarpunk?
 
-Long before refrigeration, humans discovered that certain microorganisms could transform perishable foods into stable, nutritious, and delicious preserved products. Fermentation remains one of the most energy-efficient preservation methods—requiring no electricity, minimal equipment, and producing foods that are often more nutritious than their fresh counterparts.
+You might have seen the images: cities draped in vertical gardens, solar panels gleaming on every rooftop, people cycling through car-free streets lined with fruit trees. But solarpunk is more than an aesthetic. It's a movement, a philosophy, and most importantly, a practice.
 
-## Why Ferment?
+## Beyond Dystopia
 
-**Preservation**: Lactic acid bacteria produce acids that prevent spoilage, keeping vegetables edible for months or years.
+For decades, our visions of the future have been dominated by dystopia. Blade Runner. Mad Max. The Hunger Games. These stories serve a purpose—they warn us of paths to avoid. But somewhere along the way, we forgot to imagine where we actually want to go.
 
-**Nutrition**: Fermentation increases vitamin content, produces beneficial enzymes, and makes nutrients more bioavailable.
+Solarpunk fills that gap. It asks: What if we got it right? What would a future look like where we solved the climate crisis, rebuilt community, and created abundance for all—not through magic or denial, but through the practical application of technology, wisdom, and cooperation?
 
-**Flavor**: Complex, tangy, umami-rich flavors develop that can't be achieved any other way.
+## The Roots
 
-**Gut Health**: Live fermented foods contain probiotics that support digestive health.
+Solarpunk draws from many traditions:
 
-**Low Energy**: Unlike canning, freezing, or dehydrating, fermentation requires no external energy input.
+**Appropriate Technology**: The 1970s movement led by thinkers like E.F. Schumacher ("Small is Beautiful") that emphasized human-scale, locally-controlled technology.
 
-## Basic Vegetable Fermentation
+**Permaculture**: Bill Mollison and David Holmgren's design science for creating human systems that work with natural patterns.
 
-### The Simple Salt Method
+**Transition Towns**: Rob Hopkins' movement of communities proactively preparing for climate change and energy descent.
 
-Almost any vegetable can be fermented using nothing but salt and time. Here's the basic process:
+**Solarpunk Fiction**: A literary genre that emerged in the 2010s, imagining hopeful, ecological futures.
 
-1. **Prepare vegetables**: Chop, slice, or shred. Smaller pieces ferment faster.
+**Indigenous Wisdom**: Many solarpunk principles echo knowledge that indigenous communities have practiced for millennia.
 
-2. **Salt**: Use 2-3% salt by weight. For 1kg of vegetables, that's 20-30g of salt.
+**Open Source Culture**: The ethic of sharing knowledge, designs, and tools freely for collective benefit.
 
-3. **Massage**: Work the salt into the vegetables until they release their juices. This creates the brine.
+## Core Principles
 
-4. **Pack**: Press vegetables tightly into a jar, submerging them under their own liquid.
+### 1. Ecological Integration
 
-5. **Weight**: Keep vegetables submerged. Exposure to air causes mold.
+Solarpunk doesn't see nature as something to conquer or even just protect—it sees human systems as part of nature. Our buildings should be ecosystems. Our cities should be habitats. Our agriculture should build soil, not deplete it.
 
-6. **Wait**: Fermentation takes 3-14 days depending on temperature and desired sourness.
+### 2. Appropriate Technology
 
-7. **Refrigerate**: Once fermented to your taste, cold storage slows the process.
+Technology isn't inherently good or bad—it depends on scale, ownership, and purpose. Solarpunk favors technology that:
+- Is understandable and repairable by users
+- Operates at human and community scales
+- Uses renewable resources
+- Enhances rather than replaces human capability
+- Is freely shared rather than locked behind patents
 
-### Classic Sauerkraut
+### 3. Community Resilience
 
-**Ingredients:**
-- 1 medium cabbage (about 1kg)
-- 20-25g sea salt (non-iodized)
+Resilience comes from diversity, redundancy, and strong relationships. Solarpunk communities grow their own food, generate their own power, make their own decisions—not because they're isolationist, but because local self-reliance creates genuine security.
 
-**Method:**
-1. Remove outer leaves. Quarter cabbage and slice thinly.
-2. Toss with salt in a large bowl.
-3. Massage vigorously for 5-10 minutes until liquid pools in the bottom.
-4. Pack into a clean jar, pressing down firmly after each handful.
-5. Liquid should cover cabbage. If not, add a bit of brine (1 tsp salt per cup of water).
-6. Weight down with a smaller jar filled with water, or a dedicated fermentation weight.
-7. Cover loosely to allow gases to escape.
-8. Ferment at room temperature (18-22°C ideal) for 1-4 weeks.
-9. Taste periodically. Refrigerate when sourness is to your liking.
+### 4. Prefigurative Politics
 
-## Troubleshooting
+Rather than waiting for revolution or policy change, solarpunks build the world they want to live in now. Every community garden is a food system prototype. Every housing cooperative is economic democracy in practice. Every repair café is resistance to throwaway culture.
 
-**Mold on surface**: Skim it off. If vegetables below the brine are fine, they're safe to eat.
+### 5. Radical Hope
 
-**Soft/mushy texture**: Too warm, too long, or not enough salt. Still safe but less pleasant.
+Not naive optimism that ignores real challenges, but the stubborn conviction that better worlds are possible—and that building them is the work that matters.
 
-**Not sour enough**: Give it more time, or ferment at a slightly warmer temperature.
+## What Solarpunk Isn't
 
-**Too salty**: Reduce salt percentage next time, or rinse before eating.
+**It's not techno-utopianism**: We can't technology our way out of every problem. Wisdom, restraint, and social change matter as much as solar panels.
 
-## Beyond Vegetables
+**It's not primitivism**: We don't reject technology—we want to choose it consciously and deploy it appropriately.
 
-Once you've mastered basic vegetable fermentation, explore:
+**It's not just aesthetics**: The green-and-gold imagery is beautiful, but solarpunk without practice is just pictures.
 
-- **Kimchi**: Korea's spicy fermented cabbage
-- **Miso**: Fermented soybean paste (longer process)
-- **Kombucha**: Fermented tea
-- **Kefir**: Fermented milk
-- **Sourdough**: Fermented bread dough
+**It's not a finished blueprint**: Solarpunk futures will be diverse, local, and emergent—not centrally planned.
 
-## Start Small
+## Solarpunk in Practice
 
-Don't try to ferment your entire harvest at once. Start with a single jar of sauerkraut. Once you've tasted your own creation and witnessed the magic of microbial transformation, you'll be hooked.
+What does this look like in daily life?
 
-The jars lining your pantry shelves will become a source of pride—evidence of your ability to capture summer's abundance and carry it into winter.
+- Growing food, even a windowsill herb garden
+- Learning repair skills; attending a Repair Café
+- Joining or starting a mutual aid network
+- Installing solar panels or joining community solar
+- Building with natural materials
+- Participating in local governance
+- Sharing tools, skills, and resources
+- Creating art that imagines better futures
+- Teaching others what you've learned
 
-*Happy fermenting!*`,
-			author: 'Maya Chen',
-			readTime: 12,
-			section: 'GROW',
+None of these alone is solarpunk. All of them together, practiced in community with intention and hope, is the movement in action.
+
+## Getting Started
+
+You don't need to live in an ecovillage or go off-grid to practice solarpunk. Start where you are:
+
+1. **Learn one practical skill** this season—fermentation, basic electrical, seed saving, anything useful.
+
+2. **Meet your neighbors**. Resilience is relational.
+
+3. **Join something**—a community garden, a tool library, a transition group, a housing cooperative.
+
+4. **Consume less, repair more**. Question every purchase.
+
+5. **Share what you learn**. Knowledge wants to be free.
+
+The future isn't something that happens to us. It's something we make, together, starting now.
+
+*Welcome to solarpunk.*`,
+			author: 'Almanac Team',
+			readTime: 10,
+			section: 'LEARN',
 			order: 2
 		},
 		{
@@ -1288,7 +1317,162 @@ This is the solarpunk vision made personal: homes that connect us to nature rath
 			author: 'Elena Mori',
 			readTime: 14,
 			section: 'BUILD',
-			order: 7
+			order: 6
+		}
+	];
+
+	for (const articleData of articlesData) {
+		const existing = await prisma.article.findUnique({ where: { slug: articleData.slug } });
+		if (existing) continue;
+
+		await prisma.article.create({
+			data: {
+				...articleData,
+				status: 'PUBLISHED',
+				publishedAt: new Date(),
+				editionId: edition.id
+			}
+		});
+	}
+
+	console.log(`Created Winter Solstice 2025 edition with ${articlesData.length} articles`);
+
+	// ============================================
+	// SPRING 2026 EDITION (Framework)
+	// ============================================
+	console.log('Creating Spring 2026 edition framework...');
+
+	const springEdition = await prisma.edition.upsert({
+		where: { slug: 'spring-2026' },
+		update: {},
+		create: {
+			slug: 'spring-2026',
+			title: 'Awakening',
+			season: 'SPRING',
+			year: 2026,
+			tagline: 'The growing season begins',
+			description:
+				'Our first full quarterly edition celebrates the Spring Equinox—a time of new beginnings, soil preparation, and planting seeds for the seasons ahead.',
+			status: 'DRAFT',
+			publishedAt: new Date('2026-03-20')
+		}
+	});
+
+	console.log('Created Spring 2026 edition (draft)');
+
+	// ============================================
+	// FALL 2026 EDITION (Framework with saved articles)
+	// ============================================
+	console.log('Creating Fall 2026 edition framework...');
+
+	const fallEdition = await prisma.edition.upsert({
+		where: { slug: 'fall-2026' },
+		update: {},
+		create: {
+			slug: 'fall-2026',
+			title: 'Harvest & Preserve',
+			season: 'FALL',
+			year: 2026,
+			tagline: 'Abundance through community resilience',
+			description:
+				'This edition focuses on the abundance of fall—harvesting, preserving, and building community resilience for the seasons ahead.',
+			status: 'DRAFT',
+			publishedAt: new Date('2026-09-22')
+		}
+	});
+
+	// Articles saved for Fall 2026
+	const fallArticlesData = [
+		{
+			slug: 'fermentation-fundamentals',
+			title: 'Fermentation Fundamentals',
+			subtitle: 'Transform seasonal abundance into year-round nutrition',
+			excerpt:
+				'Learn the ancient art of fermentation to preserve the harvest while boosting nutrition and flavor.',
+			content: `# Fermentation Fundamentals
+
+Long before refrigeration, humans discovered that certain microorganisms could transform perishable foods into stable, nutritious, and delicious preserved products. Fermentation remains one of the most energy-efficient preservation methods—requiring no electricity, minimal equipment, and producing foods that are often more nutritious than their fresh counterparts.
+
+## Why Ferment?
+
+**Preservation**: Lactic acid bacteria produce acids that prevent spoilage, keeping vegetables edible for months or years.
+
+**Nutrition**: Fermentation increases vitamin content, produces beneficial enzymes, and makes nutrients more bioavailable.
+
+**Flavor**: Complex, tangy, umami-rich flavors develop that can't be achieved any other way.
+
+**Gut Health**: Live fermented foods contain probiotics that support digestive health.
+
+**Low Energy**: Unlike canning, freezing, or dehydrating, fermentation requires no external energy input.
+
+## Basic Vegetable Fermentation
+
+### The Simple Salt Method
+
+Almost any vegetable can be fermented using nothing but salt and time. Here's the basic process:
+
+1. **Prepare vegetables**: Chop, slice, or shred. Smaller pieces ferment faster.
+
+2. **Salt**: Use 2-3% salt by weight. For 1kg of vegetables, that's 20-30g of salt.
+
+3. **Massage**: Work the salt into the vegetables until they release their juices. This creates the brine.
+
+4. **Pack**: Press vegetables tightly into a jar, submerging them under their own liquid.
+
+5. **Weight**: Keep vegetables submerged. Exposure to air causes mold.
+
+6. **Wait**: Fermentation takes 3-14 days depending on temperature and desired sourness.
+
+7. **Refrigerate**: Once fermented to your taste, cold storage slows the process.
+
+### Classic Sauerkraut
+
+**Ingredients:**
+- 1 medium cabbage (about 1kg)
+- 20-25g sea salt (non-iodized)
+
+**Method:**
+1. Remove outer leaves. Quarter cabbage and slice thinly.
+2. Toss with salt in a large bowl.
+3. Massage vigorously for 5-10 minutes until liquid pools in the bottom.
+4. Pack into a clean jar, pressing down firmly after each handful.
+5. Liquid should cover cabbage. If not, add a bit of brine (1 tsp salt per cup of water).
+6. Weight down with a smaller jar filled with water, or a dedicated fermentation weight.
+7. Cover loosely to allow gases to escape.
+8. Ferment at room temperature (18-22°C ideal) for 1-4 weeks.
+9. Taste periodically. Refrigerate when sourness is to your liking.
+
+## Troubleshooting
+
+**Mold on surface**: Skim it off. If vegetables below the brine are fine, they're safe to eat.
+
+**Soft/mushy texture**: Too warm, too long, or not enough salt. Still safe but less pleasant.
+
+**Not sour enough**: Give it more time, or ferment at a slightly warmer temperature.
+
+**Too salty**: Reduce salt percentage next time, or rinse before eating.
+
+## Beyond Vegetables
+
+Once you've mastered basic vegetable fermentation, explore:
+
+- **Kimchi**: Korea's spicy fermented cabbage
+- **Miso**: Fermented soybean paste (longer process)
+- **Kombucha**: Fermented tea
+- **Kefir**: Fermented milk
+- **Sourdough**: Fermented bread dough
+
+## Start Small
+
+Don't try to ferment your entire harvest at once. Start with a single jar of sauerkraut. Once you've tasted your own creation and witnessed the magic of microbial transformation, you'll be hooked.
+
+The jars lining your pantry shelves will become a source of pride—evidence of your ability to capture summer's abundance and carry it into winter.
+
+*Happy fermenting!*`,
+			author: 'Maya Chen',
+			readTime: 12,
+			section: 'GROW',
+			order: 1
 		},
 		{
 			slug: 'seed-saving-fundamentals',
@@ -1434,25 +1618,24 @@ Start small. Save seeds from one crop this year. Next year, add another. Within 
 			author: 'Sara Martinez',
 			readTime: 13,
 			section: 'GROW',
-			order: 8
+			order: 2
 		}
 	];
 
-	for (const articleData of articlesData) {
+	for (const articleData of fallArticlesData) {
 		const existing = await prisma.article.findUnique({ where: { slug: articleData.slug } });
 		if (existing) continue;
 
 		await prisma.article.create({
 			data: {
 				...articleData,
-				status: 'PUBLISHED',
-				publishedAt: new Date(),
-				editionId: edition.id
+				status: 'DRAFT',
+				editionId: fallEdition.id
 			}
 		});
 	}
 
-	console.log(`Created edition with ${articlesData.length} articles`);
+	console.log(`Created Fall 2026 edition (draft) with ${fallArticlesData.length} articles`);
 
 	console.log('✅ Seed completed!');
 }
