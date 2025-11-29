@@ -58,8 +58,12 @@ export default {
 				}
 			},
 			fontFamily: {
+				// UI fonts
 				orbitron: ['Orbitron', 'sans-serif'],
-				inter: ['Inter', 'sans-serif']
+				inter: ['Inter', 'sans-serif'],
+				// Codex reading fonts
+				literata: ['Literata', 'Georgia', 'serif'],
+				fraunces: ['Fraunces', 'Georgia', 'serif']
 			},
 			animation: {
 				'float': 'float 6s ease-in-out infinite',

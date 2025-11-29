@@ -1,6 +1,15 @@
+/* ═══════════════════════════════════════════════════════════════
+   Codex Design System
+   Skeuomorphic tokens for the reading experience
+   ═══════════════════════════════════════════════════════════════ */
+@import '$lib/codex/styles/tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Codex Typography (after Tailwind for proper cascade) */
+@import '$lib/codex/styles/typography.css';
 
 @layer base {
 	:root {
@@ -139,6 +148,70 @@
 
 	.light .skeleton {
 		@apply bg-slate-200;
+	}
+
+	/* ═══════════════════════════════════════════════════════════════
+	   Codex Component Helpers
+	   ═══════════════════════════════════════════════════════════════ */
+
+	/* Paper background for reading areas */
+	.codex-paper {
+		background-color: var(--codex-paper-cream);
+		color: var(--codex-ink-black);
+	}
+
+	.codex-paper-white {
+		background-color: var(--codex-paper-white);
+	}
+
+	.codex-paper-aged {
+		background-color: var(--codex-paper-aged);
+	}
+
+	/* Ink colors */
+	.codex-ink {
+		color: var(--codex-ink-black);
+	}
+
+	.codex-ink-sepia {
+		color: var(--codex-ink-sepia);
+	}
+
+	.codex-ink-muted {
+		color: var(--codex-ink-muted);
+	}
+
+	/* Seasonal accent */
+	.codex-accent {
+		color: var(--codex-accent);
+	}
+
+	.codex-accent-bg {
+		background-color: var(--codex-accent);
+	}
+
+	/* Reading container with proper measure */
+	.codex-reading {
+		font-family: var(--codex-font-body);
+		font-size: var(--codex-text-lg);
+		line-height: var(--codex-leading-relaxed);
+		max-width: var(--codex-measure-normal);
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	/* Display headings */
+	.codex-display {
+		font-family: var(--codex-font-display);
+	}
+
+	/* Page shadow effects */
+	.codex-shadow {
+		box-shadow: var(--codex-shadow-page);
+	}
+
+	.codex-shadow-lifted {
+		box-shadow: var(--codex-shadow-lifted);
 	}
 }
 
