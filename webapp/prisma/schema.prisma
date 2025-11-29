@@ -294,3 +294,119 @@ model Subscriber {
 
   @@map("subscribers")
 }
+
+// ============================================
+// CONTENT HARVESTING PIPELINE
+// ============================================
+
+model HarvestSource {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  type        SourceType
+  url         String?
+  description String?
+  config      Json?        // API keys, selectors, rate limits, etc.
+  mapping     Json?        // Field mapping: source -> our schema
+  schedule    String?      // Cron expression for auto-harvest
+  isActive    Boolean      @default(true)
+  priority    Int          @default(0) // Higher = process first
+  lastHarvest DateTime?
+  lastError   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  items HarvestItem[]
+
+  @@map("harvest_sources")
+}
+
+enum SourceType {
+  RSS          // RSS/Atom feeds
+  API          // REST APIs (GEN, OSM, etc.)
+  SCRAPE       // Web scraping (with permission)
+  SOCIAL       // Social media hashtags
+  FORM         // User submissions
+  MANUAL       // Manual curation
+  IMPORT       // Bulk data imports
+}
+
+model HarvestItem {
+  id           String        @id @default(cuid())
+  sourceId     String
+  externalId   String        // Dedupe key from source
+  externalUrl  String?       // Original URL
+
+  // Raw and processed data
+  rawData      Json          // Original data from source
+  normalized   Json?         // Mapped to our schema
+
+  // Classification
+  contentType  ContentType   @default(PROJECT)
+  quality      Int           @default(0) // 0-100 quality score
+
+  // Review workflow
+  status       HarvestStatus @default(PENDING)
+  reviewNotes  String?
+  reviewedById String?
+  reviewedAt   DateTime?
+
+  // If converted to content
+  projectId    String?       @unique
+  articleId    String?       @unique
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Relations
+  source HarvestSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, externalId])
+  @@index([status])
+  @@index([contentType])
+  @@index([quality])
+  @@map("harvest_items")
+}
+
+enum ContentType {
+  PROJECT      // Directory project
+  ARTICLE      // Edition article
+  EVENT        // Community event
+  RESOURCE     // Tool/resource link
+}
+
+enum HarvestStatus {
+  PENDING      // Awaiting review
+  APPROVED     // Ready to publish
+  REJECTED     // Not suitable
+  PUBLISHED    // Live on site
+  DUPLICATE    // Already exists
+  NEEDS_INFO   // Requires more data
+}
+
+// ============================================
+// CONTENT OBSERVATION & ANALYTICS
+// ============================================
+
+model ContentSignal {
+  id          String      @id @default(cuid())
+  type        SignalType
+  source      String      // Where observed (search, social, etc.)
+  value       String      // The signal (search term, hashtag, etc.)
+  count       Int         @default(1)
+  metadata    Json?       // Additional context
+  observedAt  DateTime    @default(now())
+
+  @@index([type, observedAt])
+  @@map("content_signals")
+}
+
+enum SignalType {
+  SEARCH_QUERY     // What users search for
+  TRENDING_TOPIC   // Social trends
+  CONTENT_GAP      // Missing content identified
+  USER_REQUEST     // Direct user requests
+  GEOGRAPHIC       // Location-based interest
+  SEASONAL         // Time-based patterns
+}

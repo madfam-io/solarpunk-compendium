@@ -4,13 +4,16 @@
  * Populates the database with initial data:
  * - Categories
  * - SDGs (Sustainable Development Goals)
- * - Sample projects
+ * - Harvest sources
+ * - Flagship projects
  * - Sample edition with articles
  *
  * Run with: npx prisma db seed
  */
 
 import { PrismaClient } from '@prisma/client';
+import { ALL_SOURCES } from '../src/lib/server/harvest/sources';
+import { FLAGSHIP_PROJECTS } from '../src/lib/server/harvest/harvesters/manual';
 
 const prisma = new PrismaClient();
 
@@ -151,6 +154,56 @@ async function main() {
 	console.log(`Created ${sdgData.length} SDGs`);
 
 	// ============================================
+	// HARVEST SOURCES
+	// ============================================
+	console.log('Creating harvest sources...');
+
+	for (const source of ALL_SOURCES) {
+		await prisma.harvestSource.upsert({
+			where: { slug: source.slug },
+			update: {
+				name: source.name,
+				url: source.url,
+				description: source.description,
+				config: source.config,
+				mapping: source.mapping,
+				priority: source.priority,
+				schedule: source.schedule
+			},
+			create: {
+				slug: source.slug,
+				name: source.name,
+				type: source.type,
+				url: source.url,
+				description: source.description,
+				config: source.config,
+				mapping: source.mapping,
+				priority: source.priority,
+				schedule: source.schedule,
+				isActive: true
+			}
+		});
+	}
+
+	console.log(`Created ${ALL_SOURCES.length} harvest sources`);
+
+	// ============================================
+	// SYSTEM USER (for harvested content)
+	// ============================================
+	console.log('Creating system user...');
+
+	const systemUser = await prisma.user.upsert({
+		where: { email: 'system@solarpunkalmanac.org' },
+		update: {},
+		create: {
+			email: 'system@solarpunkalmanac.org',
+			name: 'Solarpunk Almanac',
+			bio: 'System account for harvested content',
+			emailVerified: new Date()
+		}
+	});
+
+	// ============================================
 	// SAMPLE USER (for project submissions)
 	// ============================================
 	console.log('Creating sample user...');
@@ -165,6 +218,76 @@ async function main() {
 			emailVerified: new Date()
 		}
 	});
+
+	// ============================================
+	// FLAGSHIP PROJECTS (from curated list)
+	// ============================================
+	console.log('Creating flagship projects...');
+
+	for (const project of FLAGSHIP_PROJECTS) {
+		if (!project.name) continue;
+
+		const slug = project.name
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/^-|-$/g, '');
+
+		const existing = await prisma.project.findUnique({ where: { slug } });
+		if (existing) continue;
+
+		const createdProject = await prisma.project.create({
+			data: {
+				slug,
+				name: project.name,
+				tagline: project.tagline || '',
+				description: project.description || '',
+				website: project.website,
+				location: project.location,
+				coordinates: project.coordinates,
+				coverImage: project.coverImage,
+				status: 'PUBLISHED',
+				featured: true,
+				submittedById: systemUser.id
+			}
+		});
+
+		// Link categories
+		if (project.categories) {
+			for (const catSlug of project.categories) {
+				const category = await prisma.category.findUnique({ where: { slug: catSlug } });
+				if (category) {
+					await prisma.projectCategory.create({
+						data: { projectId: createdProject.id, categoryId: category.id }
+					}).catch(() => {});
+				}
+			}
+		}
+
+		// Link SDGs
+		if (project.sdgs) {
+			for (const sdgId of project.sdgs) {
+				await prisma.projectSDG.create({
+					data: { projectId: createdProject.id, sdgId }
+				}).catch(() => {});
+			}
+		}
+
+		// Create tags
+		if (project.tags) {
+			for (const tagName of project.tags) {
+				const tag = await prisma.tag.upsert({
+					where: { name: tagName },
+					update: {},
+					create: { name: tagName }
+				});
+				await prisma.projectTag.create({
+					data: { projectId: createdProject.id, tagId: tag.id }
+				}).catch(() => {});
+			}
+		}
+	}
+
+	console.log(`Created ${FLAGSHIP_PROJECTS.length} flagship projects`);
 
 	// ============================================
 	// SAMPLE PROJECTS
@@ -358,7 +481,7 @@ We believe the futures we imagine are the futures we create. Our art is propagan
 		}
 	});
 
-	// Sample articles
+	// Complete articles for Fall 2025
 	const articlesData = [
 		{
 			slug: 'welcome-fall-2025',
@@ -366,19 +489,130 @@ We believe the futures we imagine are the futures we create. Our art is propagan
 			subtitle: 'A season of abundance and preparation',
 			excerpt:
 				'As the days shorten and the harvest comes in, we turn our attention to preservation, community building, and preparing for the quieter months ahead.',
-			content: '# Welcome to Fall 2025\n\nContent here...',
+			content: `# Welcome to Fall 2025
+
+As the September equinox passes, we enter a season of profound transition. The abundance of summer reaches its peak, offering one last burst of productivity before the quiet of winter arrives.
+
+## The Rhythm of the Season
+
+Fall has always been a time of reckoning—of tallying the year's growth and preparing for scarcity. Our ancestors knew this rhythm intimately, and though many of us have lost touch with seasonal living, the pattern remains encoded in our cultures and our bodies.
+
+This edition of The Solarpunk Almanac honors that rhythm while looking forward. We explore how traditional practices of preservation and preparation can combine with modern technology and community organizing to build genuine resilience.
+
+## What You'll Find Inside
+
+**GROW**: From fermentation fundamentals to seed saving, we cover the skills needed to extend the harvest through winter and prepare for next year's growing season.
+
+**BUILD**: As temperatures drop, we focus on passive solar retrofits, weatherization, and thermal mass—keeping warm without burning fossil fuels.
+
+**POWER**: Fall's longer nights mean more reliance on stored energy. We examine battery systems, load management, and the art of living well with less.
+
+**CONNECT**: Community resilience starts with knowing your neighbors. This section covers mutual aid networks, skill shares, and building the social infrastructure for hard times.
+
+**THRIVE**: Seasonal affective challenges are real. We explore light therapy, indoor gardening, and practices that maintain well-being through darker months.
+
+**CREATE**: Fall festivals, harvest celebrations, and the art of intentional rest. Plus solarpunk fiction exploring autumn themes.
+
+**LEARN**: Workshops, courses, and resources to deepen your skills during the indoor season ahead.
+
+## A Note on Abundance
+
+Solarpunk isn't about scarcity. It's about recognizing that true abundance comes not from infinite consumption but from living in right relationship with natural cycles. Fall teaches us this lesson every year: the harvest is finite, but with wisdom and planning, it can sustain us through to the next growing season.
+
+Let's learn together.
+
+*— The Almanac Team*`,
 			author: 'Almanac Team',
 			readTime: 5,
 			section: 'OVERVIEW',
 			order: 1
 		},
 		{
-			slug: 'fermentation-basics',
-			title: 'Fermentation Basics',
-			subtitle: 'Preserve the harvest with living foods',
+			slug: 'fermentation-fundamentals',
+			title: 'Fermentation Fundamentals',
+			subtitle: 'Transform seasonal abundance into year-round nutrition',
 			excerpt:
-				'Learn the ancient art of fermentation to transform seasonal abundance into year-round nutrition.',
-			content: '# Fermentation Basics\n\nContent here...',
+				'Learn the ancient art of fermentation to preserve the harvest while boosting nutrition and flavor.',
+			content: `# Fermentation Fundamentals
+
+Long before refrigeration, humans discovered that certain microorganisms could transform perishable foods into stable, nutritious, and delicious preserved products. Fermentation remains one of the most energy-efficient preservation methods—requiring no electricity, minimal equipment, and producing foods that are often more nutritious than their fresh counterparts.
+
+## Why Ferment?
+
+**Preservation**: Lactic acid bacteria produce acids that prevent spoilage, keeping vegetables edible for months or years.
+
+**Nutrition**: Fermentation increases vitamin content, produces beneficial enzymes, and makes nutrients more bioavailable.
+
+**Flavor**: Complex, tangy, umami-rich flavors develop that can't be achieved any other way.
+
+**Gut Health**: Live fermented foods contain probiotics that support digestive health.
+
+**Low Energy**: Unlike canning, freezing, or dehydrating, fermentation requires no external energy input.
+
+## Basic Vegetable Fermentation
+
+### The Simple Salt Method
+
+Almost any vegetable can be fermented using nothing but salt and time. Here's the basic process:
+
+1. **Prepare vegetables**: Chop, slice, or shred. Smaller pieces ferment faster.
+
+2. **Salt**: Use 2-3% salt by weight. For 1kg of vegetables, that's 20-30g of salt.
+
+3. **Massage**: Work the salt into the vegetables until they release their juices. This creates the brine.
+
+4. **Pack**: Press vegetables tightly into a jar, submerging them under their own liquid.
+
+5. **Weight**: Keep vegetables submerged. Exposure to air causes mold.
+
+6. **Wait**: Fermentation takes 3-14 days depending on temperature and desired sourness.
+
+7. **Refrigerate**: Once fermented to your taste, cold storage slows the process.
+
+### Classic Sauerkraut
+
+**Ingredients:**
+- 1 medium cabbage (about 1kg)
+- 20-25g sea salt (non-iodized)
+
+**Method:**
+1. Remove outer leaves. Quarter cabbage and slice thinly.
+2. Toss with salt in a large bowl.
+3. Massage vigorously for 5-10 minutes until liquid pools in the bottom.
+4. Pack into a clean jar, pressing down firmly after each handful.
+5. Liquid should cover cabbage. If not, add a bit of brine (1 tsp salt per cup of water).
+6. Weight down with a smaller jar filled with water, or a dedicated fermentation weight.
+7. Cover loosely to allow gases to escape.
+8. Ferment at room temperature (18-22°C ideal) for 1-4 weeks.
+9. Taste periodically. Refrigerate when sourness is to your liking.
+
+## Troubleshooting
+
+**Mold on surface**: Skim it off. If vegetables below the brine are fine, they're safe to eat.
+
+**Soft/mushy texture**: Too warm, too long, or not enough salt. Still safe but less pleasant.
+
+**Not sour enough**: Give it more time, or ferment at a slightly warmer temperature.
+
+**Too salty**: Reduce salt percentage next time, or rinse before eating.
+
+## Beyond Vegetables
+
+Once you've mastered basic vegetable fermentation, explore:
+
+- **Kimchi**: Korea's spicy fermented cabbage
+- **Miso**: Fermented soybean paste (longer process)
+- **Kombucha**: Fermented tea
+- **Kefir**: Fermented milk
+- **Sourdough**: Fermented bread dough
+
+## Start Small
+
+Don't try to ferment your entire harvest at once. Start with a single jar of sauerkraut. Once you've tasted your own creation and witnessed the magic of microbial transformation, you'll be hooked.
+
+The jars lining your pantry shelves will become a source of pride—evidence of your ability to capture summer's abundance and carry it into winter.
+
+*Happy fermenting!*`,
 			author: 'Maya Chen',
 			readTime: 12,
 			section: 'GROW',
@@ -390,11 +624,535 @@ We believe the futures we imagine are the futures we create. Our art is propagan
 			subtitle: 'Prepare your home for winter without fossil fuels',
 			excerpt:
 				'Simple modifications to capture and retain solar heat can dramatically reduce heating needs.',
-			content: '# Passive Solar Retrofit Guide\n\nContent here...',
+			content: `# Passive Solar Retrofit Guide
+
+Most existing buildings were designed assuming cheap, abundant fossil fuels for heating. But with basic understanding of heat flow and some strategic modifications, you can dramatically reduce energy needs—often without major construction.
+
+## Understanding Heat Flow
+
+Heat moves in three ways:
+
+1. **Conduction**: Heat traveling through materials (like through a cold window)
+2. **Convection**: Heat carried by moving air (drafts, ventilation)
+3. **Radiation**: Heat traveling as infrared light (sunlight through windows, radiators)
+
+Effective passive solar design manages all three.
+
+## The Basics: Stop Heat Loss First
+
+Before adding solar gain, reduce heat loss. It's almost always more cost-effective.
+
+### Air Sealing (Convection)
+
+**Priority areas:**
+- Windows and doors (weatherstripping)
+- Electrical outlets on exterior walls
+- Where walls meet floors and ceilings
+- Plumbing and wiring penetrations
+- Fireplace dampers
+
+**Simple test**: On a windy day, hold a lit incense stick near suspected leaks. Watch the smoke for air movement.
+
+### Insulation (Conduction)
+
+**Priority order:**
+1. Attic/roof (heat rises, biggest impact)
+2. Basement/crawlspace
+3. Walls (harder to address in existing buildings)
+
+**Easy wins:**
+- Add loose-fill insulation to attic
+- Insulate hot water pipes
+- Add door draft stoppers
+- Use thermal curtains
+
+### Windows (All Three)
+
+Windows are thermal holes in your walls. Options:
+
+- **Repair/weatherstrip** existing windows
+- **Add interior storm windows** (DIY-friendly)
+- **Install insulating window quilts** for nighttime
+- **Replace with high-performance glazing** (expensive but effective)
+
+## Adding Solar Gain
+
+Once you've reduced heat loss, add controlled solar heating.
+
+### South-Facing Windows
+
+In the Northern Hemisphere, south-facing windows receive the most winter sun while being easier to shade in summer.
+
+**Optimize existing windows:**
+- Remove obstacles blocking winter sun
+- Trim deciduous trees/shrubs to allow winter light (they'll shade in summer)
+- Keep windows clean
+- Open curtains during sunny hours
+
+**Add window area:**
+- Enlarge south windows (major renovation)
+- Add a sun-space or enclosed porch
+
+### Thermal Mass
+
+Mass absorbs heat during the day and releases it at night, smoothing temperature swings.
+
+**Effective mass materials:**
+- Water (highest heat capacity)
+- Concrete/stone/tile
+- Brick
+- Earth (rammed earth, adobe)
+
+**Simple additions:**
+- Water containers in sunny areas (painted dark colors)
+- Tile or stone flooring in sunny zones
+- Masonry or stone on interior walls receiving sun
+
+### Trombe Walls
+
+A Trombe wall is a south-facing masonry wall with glazing in front of it. Sun heats the wall, which radiates heat to the interior.
+
+**DIY version:**
+- Build a simple glazed frame against a south-facing masonry wall
+- Include vents at top and bottom for convection
+- Close vents at night to retain heat
+
+## Zoning and Behavior
+
+Design and behavior changes are free:
+
+- **Close off unused rooms** in winter
+- **Live in the sunny part** of your home during the day
+- **Sleep in the warmest room** (heat rises—consider upper floors)
+- **Use thermal curtains** and open/close them with the sun
+- **Dress warmly** and lower thermostat
+- **Gather people and animals** (each human outputs ~100W of heat)
+
+## Measuring Success
+
+**Track your progress:**
+- Monitor energy bills month-to-month and year-to-year
+- Use a thermometer to track indoor temperatures
+- Note comfort levels at different thermostat settings
+
+## Getting Started
+
+1. **Audit your current situation**: Where are the drafts? Which rooms are coldest? Where does the sun reach?
+
+2. **Start with air sealing**: Biggest bang for buck, requires minimal investment.
+
+3. **Add thermal mass to sunny areas**: Even a few water jugs can help.
+
+4. **Improve window performance**: Weatherstrip, add inserts, use thermal curtains.
+
+5. **Track results**: Measure before and after.
+
+Each improvement builds on the last. Over time, your home becomes more comfortable while requiring less heating energy. That's the solarpunk approach: not just surviving winter, but thriving in it.`,
 			author: 'Alex Rivera',
 			readTime: 15,
 			section: 'BUILD',
 			order: 3
+		},
+		{
+			slug: 'community-resilience-mapping',
+			title: 'Mapping Community Resilience',
+			subtitle: 'Know your neighbors before you need them',
+			excerpt:
+				'Building social infrastructure is the foundation of community resilience. Start by understanding what resources and skills already exist in your neighborhood.',
+			content: `# Mapping Community Resilience
+
+The most resilient communities aren't those with the most supplies or the fanciest technology. They're the ones where people know each other, trust each other, and have practiced working together before crisis hits.
+
+## Why Mapping Matters
+
+Every community has hidden assets—skills, tools, knowledge, and relationships that become visible only when you look for them. Asset mapping reveals:
+
+- Who knows how to fix things?
+- Who has tools they'd share?
+- Who has medical training?
+- Who has extra garden space?
+- Who checks on elderly neighbors?
+- Who has experience with emergencies?
+
+This knowledge, documented and shared, becomes infrastructure as real as any physical system.
+
+## The Mapping Process
+
+### 1. Define Your Community
+
+Start with a manageable geographic area:
+- A single block or apartment building
+- A few surrounding streets
+- A neighborhood with clear boundaries
+
+Smaller is better for starting. You can always expand.
+
+### 2. Gather Initial Data
+
+**Walk the neighborhood:**
+- Note businesses, institutions, gathering places
+- Observe who's around at different times
+- Identify visible resources (gardens, solar panels, workshops)
+
+**Check existing records:**
+- Neighborhood associations
+- Community groups
+- Local directories
+- Social media groups
+
+### 3. Connect with People
+
+The heart of mapping is conversation. Methods:
+
+**Door-knocking**: Simple and direct. "Hi, I'm [name], I live at [address]. I'm trying to get to know neighbors better and understand what skills and resources we have in our community. Would you have a few minutes to chat?"
+
+**Community events**: Host a potluck, block party, or skills-share. Combine socializing with light information gathering.
+
+**Surveys**: Physical or digital, distributed through existing channels. Keep them short and respect privacy.
+
+### 4. What to Map
+
+**People assets:**
+- Professional skills (medical, construction, teaching)
+- Practical skills (gardening, repair, cooking)
+- Languages spoken
+- Willingness to help in emergencies
+- Vulnerabilities (mobility, medical needs)
+
+**Physical assets:**
+- Tools and equipment
+- Space (for meetings, storage, gardens)
+- Vehicles
+- Water sources
+- Energy systems
+
+**Organizational assets:**
+- Churches/temples/mosques
+- Schools
+- Businesses
+- Clubs and groups
+
+**Relationship assets:**
+- Who knows whom?
+- What connections exist to outside resources?
+- Who has influence or organizing experience?
+
+### 5. Store and Share Information
+
+Create systems that:
+- Are accessible when power is out (paper backup)
+- Respect privacy (get consent for what's shared)
+- Stay updated (assign someone to maintain)
+- Are actionable (organized for quick reference)
+
+**Simple format:**
+- A neighborhood directory with skills/resources
+- A physical map with key locations marked
+- A list of who to contact for specific needs
+
+### 6. Build on What You Find
+
+Mapping is just the beginning. Use findings to:
+
+- Form neighborhood response teams
+- Organize skill-sharing events
+- Create mutual aid networks
+- Identify gaps and work to fill them
+- Connect isolated neighbors with community
+
+## Privacy and Trust
+
+**Be transparent** about why you're collecting information and how it will be used.
+
+**Get consent** before including anyone in shared documents.
+
+**Start with relationships**, not data collection. People share with those they trust.
+
+**Protect sensitive information**. Some details (medical conditions, vulnerabilities) should be held by trusted coordinators, not published broadly.
+
+## Start Small, Build Relationships
+
+Don't try to map everything at once. Start with your immediate neighbors. Build real relationships before asking for detailed information. Let the mapping process itself become a relationship-building activity.
+
+The goal isn't a perfect database. It's a community that knows itself—people who will look out for each other because they actually know each other.
+
+That social infrastructure, more than any physical preparation, is what gets communities through hard times.`,
+			author: 'Jordan Williams',
+			readTime: 14,
+			section: 'CONNECT',
+			order: 4
+		},
+		{
+			slug: 'seasonal-wellness-rituals',
+			title: 'Seasonal Wellness Rituals',
+			subtitle: 'Thriving through the darkening days',
+			excerpt:
+				'As daylight shortens, intentional practices can help maintain energy, mood, and connection through the fall and winter months.',
+			content: `# Seasonal Wellness Rituals
+
+The transition from long summer days to shorter fall and winter ones affects us more than we often acknowledge. Reduced daylight impacts circadian rhythms, energy levels, and mood. Rather than fighting this change, we can work with it—honoring the season's invitation to slow down while maintaining wellbeing.
+
+## Understanding Seasonal Changes
+
+**Light affects everything:**
+- Melatonin production (sleep hormone) increases with darkness
+- Serotonin production (mood regulator) decreases with less light
+- Circadian rhythms shift, affecting sleep and energy patterns
+- Vitamin D synthesis drops without sun exposure
+
+These are natural responses to environmental change, not disorders to be cured. But in a world designed around year-round productivity, they can feel like problems.
+
+## Morning Light Rituals
+
+Light exposure in the first hour after waking has powerful effects on circadian regulation and mood.
+
+**Practices:**
+- Get outside within an hour of waking, even briefly
+- If going out isn't possible, sit near the brightest window
+- Consider a light therapy lamp (10,000 lux, 20-30 minutes)
+- Eat breakfast in the brightest part of your home
+
+**Why it works:** Morning light suppresses melatonin, signals alertness, and anchors your circadian rhythm for the day.
+
+## Movement and Body Practices
+
+When it's cold and dark outside, motivation to move decreases. But movement is crucial for energy and mood.
+
+**Indoor options:**
+- Yoga (particularly warming practices like vinyasa)
+- Bodyweight exercises
+- Dancing to favorite music
+- Stretching while watching something
+- Indoor cycling or rowing
+
+**Bundled outdoor options:**
+- Brisk walks (even 15 minutes helps)
+- Cold-weather gardening and yard work
+- Outdoor games and activities with others
+
+**Key insight:** Some movement is infinitely better than no movement. Don't let perfect be the enemy of good.
+
+## Nourishment Practices
+
+What we eat affects energy, mood, and immune function—especially important in cold and flu season.
+
+**Seasonal eating:**
+- Root vegetables, squash, and hearty greens
+- Warming spices (ginger, turmeric, cinnamon)
+- Fermented foods (see our fermentation article)
+- Bone broths and soups
+- Mushrooms for immune support
+
+**Mindful eating:**
+- Eat meals at regular times
+- Take time to sit and enjoy food
+- Share meals with others when possible
+
+## Evening Wind-Down
+
+Natural darkness signals rest. Work with it rather than against it.
+
+**Practices:**
+- Dim lights in the evening (or use warm-toned bulbs)
+- Reduce screen time, especially blue light, after sunset
+- Create a consistent bedtime routine
+- Accept earlier bedtimes as seasonal, not lazy
+
+**Tech adjustments:**
+- Enable night mode on devices
+- Consider blue-light blocking glasses
+- Keep bedroom as dark as possible
+
+## Connection Rituals
+
+Isolation worsens seasonal challenges. Intentionally maintain connection.
+
+**Ideas:**
+- Regular check-ins with friends (calls, video chats)
+- Neighborhood gatherings and potlucks
+- Join or start a winter activity group
+- Volunteer with organizations serving others
+
+## Creative and Reflective Practices
+
+Darkness invites introspection. Embrace it.
+
+**Options:**
+- Journaling and reflection
+- Reading (physical books, not screens)
+- Crafts and hands-on projects
+- Learning new skills during indoor time
+- Art and creative expression
+
+## Honoring the Season
+
+The modern expectation of constant productivity regardless of season is relatively new—and arguably harmful. Most traditional cultures had built-in winter slowdowns: shorter work days, more rest, more celebration.
+
+Consider that perhaps:
+- Sleeping more in winter is natural, not lazy
+- Wanting to stay home is self-protective, not antisocial
+- Feeling reflective is healthy, not depressive
+- Needing more warmth and comfort is human, not weak
+
+## When to Seek Help
+
+Seasonal changes are normal. But significant depression, anxiety, or inability to function warrant professional attention. If symptoms are severe or interfering with life, please consult a healthcare provider.
+
+## Starting Small
+
+Don't try to overhaul everything at once. Pick one practice that resonates. Try it for a week. Notice how you feel. Add another practice if helpful.
+
+The goal isn't to conquer winter but to move through it with intention, maintaining wellbeing while honoring the season's gifts: rest, reflection, and preparation for the light's return.`,
+			author: 'Dr. Kenji Tanaka',
+			readTime: 11,
+			section: 'THRIVE',
+			order: 5
+		},
+		{
+			slug: 'seed-saving-fundamentals',
+			title: 'Seed Saving Fundamentals',
+			subtitle: "Closing the loop on your garden's lifecycle",
+			excerpt:
+				'Saving seeds from your best plants ensures adapted varieties, food sovereignty, and connection to the cycle of growing.',
+			content: `# Seed Saving Fundamentals
+
+Every vegetable you grow started as a seed. When you save seeds from your own garden, you close the loop—no longer dependent on annual purchases, instead participating in the continuous cycle of life that has sustained human agriculture for 10,000 years.
+
+## Why Save Seeds?
+
+**Adaptation**: Plants grown from saved seeds gradually adapt to your specific conditions—your soil, climate, and microclimate. Over generations, they become increasingly suited to your garden.
+
+**Resilience**: Maintaining diverse seed stocks distributed among many growers is more resilient than centralized commercial production.
+
+**Sovereignty**: When you save seeds, you control a crucial input to food production. You're not dependent on corporations or supply chains.
+
+**Connection**: Seed saving connects you to the full lifecycle of plants and to the long chain of gardeners who came before.
+
+**Cost**: Once established, saved seeds are free.
+
+## Beginner-Friendly Crops
+
+Start with self-pollinating annuals that are easy to select and store:
+
+**Easiest:**
+- Tomatoes
+- Peppers
+- Beans
+- Peas
+- Lettuce
+
+**Moderate:**
+- Squash/pumpkins (need isolation or hand-pollination)
+- Cucumbers (same)
+- Corn (needs isolation)
+
+**Advanced:**
+- Biennials (carrots, beets, onions) - require overwintering
+- Brassicas (kale, cabbage) - complex pollination, cross easily
+
+## Basic Process
+
+### 1. Select Plants
+
+**Choose your best:**
+- Healthiest, most vigorous plants
+- True to type (showing variety characteristics)
+- First to produce, or most productive
+- Most disease-resistant
+
+**Never save from:**
+- Weak or diseased plants
+- Off-type specimens
+- F1 hybrids (offspring won't be true to type)
+
+### 2. Let Seeds Mature
+
+Seeds need to fully mature on the plant:
+- Beans/peas: Let pods dry brown on vine
+- Tomatoes: Allow to fully ripen (even overripe)
+- Peppers: Let fruit color fully and start to wrinkle
+- Lettuce: Let plant bolt and flowers dry to fluff
+- Squash: Leave until vine dies, skin is hard
+
+### 3. Harvest and Clean
+
+**Dry seeds (beans, peas, lettuce, flowers):**
+1. Remove from pods/heads
+2. Winnow or pick out debris
+3. Spread to dry completely
+
+**Wet seeds (tomatoes, cucumbers, squash):**
+1. Scoop seeds with pulp
+2. Ferment in water 2-3 days (tomatoes) or rinse clean (squash)
+3. Dry thoroughly on plates or screens
+
+### 4. Dry Thoroughly
+
+Seeds must be completely dry for storage:
+- Spread on plates or screens
+- Air dry in warm, well-ventilated area
+- 1-2 weeks for most seeds
+- Seed should snap, not bend
+
+### 5. Store Properly
+
+**Enemies of stored seeds:**
+- Heat
+- Moisture
+- Light
+
+**Good storage:**
+- Airtight containers (glass jars, sealed bags)
+- Cool, dark location
+- Add silica gel packets for moisture control
+- Label with variety and date
+
+**Storage life (properly stored):**
+- 1-2 years: Onion, parsley, parsnip
+- 3-4 years: Beans, peas, carrots, peppers
+- 5+ years: Tomatoes, brassicas, squash
+
+## Isolation and Purity
+
+Some plants cross-pollinate easily. To maintain variety purity:
+
+**Isolation by distance:**
+- Squash family: 1/2 to 1 mile
+- Corn: 1/4 mile
+- Peppers: 50-300 feet (depending on local insect population)
+
+**Isolation by timing:**
+- Grow only one variety
+- Stagger plantings so flowering doesn't overlap
+
+**Hand pollination:**
+- Cover female flowers before opening
+- Transfer pollen from same variety
+- Re-cover until fruit sets
+
+## Building a Seed Library
+
+Once you're saving seeds, you have more than you need. Share!
+
+**Options:**
+- Start a neighborhood seed swap
+- Contribute to a local seed library
+- Trade with other gardeners online
+- Gift seeds to new gardeners
+
+## The Long View
+
+Seed saving is a long game. One year's seeds are next year's plants, whose seeds become the following year's plants. Over time, you develop relationships with particular varieties—learning their quirks, selecting for desired traits, adapting them to your conditions.
+
+This is how our ancestors created all the vegetable varieties we grow today. Every heirloom tomato exists because countless gardeners before us selected and saved seeds, passing their favorites down through generations.
+
+When you save seeds, you join that unbroken chain. You become a steward of genetic diversity and an active participant in the ongoing evolution of our food plants.
+
+Start small. Save seeds from one crop this year. Next year, add another. Within a few seasons, you'll be well on your way to seed sovereignty.`,
+			author: 'Sara Martinez',
+			readTime: 13,
+			section: 'GROW',
+			order: 6
 		}
 	];
 
