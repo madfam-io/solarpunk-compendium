@@ -7,10 +7,13 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
+import { requireAdmin } from '$lib/server/admin';
 import type { HarvestStatus } from '@prisma/client';
 
 // GET /api/admin/harvest/queue/[id] - Get single item
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async (event) => {
+	requireAdmin(event);
+	const { params } = event;
 	const item = await db.harvestItem.findUnique({
 		where: { id: params.id },
 		include: {
@@ -26,8 +29,9 @@ export const GET: RequestHandler = async ({ params }) => {
 };
 
 // PATCH /api/admin/harvest/queue/[id] - Update single item
-export const PATCH: RequestHandler = async ({ params, request }) => {
-	// TODO: Add admin auth check
+export const PATCH: RequestHandler = async (event) => {
+	requireAdmin(event);
+	const { params, request } = event;
 
 	const body = await request.json();
 	const { status, reviewNotes, normalized } = body;
@@ -71,8 +75,9 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 };
 
 // DELETE /api/admin/harvest/queue/[id] - Delete item
-export const DELETE: RequestHandler = async ({ params }) => {
-	// TODO: Add admin auth check
+export const DELETE: RequestHandler = async (event) => {
+	requireAdmin(event);
+	const { params } = event;
 
 	await db.harvestItem.delete({
 		where: { id: params.id }

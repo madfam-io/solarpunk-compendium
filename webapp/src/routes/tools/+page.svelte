@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SEO from '$lib/components/SEO.svelte';
+
 	const tools = [
 		{
 			slug: 'solar-calculator',
@@ -58,10 +60,11 @@
 		: tools.filter(t => t.category === selectedCategory);
 </script>
 
-<svelte:head>
-	<title>Practical Tools | The Solarpunk Almanac</title>
-	<meta name="description" content="Calculators, planners, and guides for sustainable living. From solar sizing to seed starting." />
-</svelte:head>
+<SEO
+	title="Practical Tools"
+	description="Calculators, planners, and guides for sustainable living. From solar sizing to seed starting."
+	keywords="solar calculator, carbon footprint, seed planner, rainwater calculator, sustainability tools, green living calculators"
+/>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 	<!-- Header -->

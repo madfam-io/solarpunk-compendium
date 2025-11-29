@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
+	import SEO from '$lib/components/SEO.svelte';
 
 	export let data;
 
@@ -45,13 +46,11 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Project Directory | The Solarpunk Almanac</title>
-	<meta
-		name="description"
-		content="Discover solarpunk projects, ecovillages, makerspaces, and regenerative organizations worldwide."
-	/>
-</svelte:head>
+<SEO
+	title="Project Directory"
+	description="Discover solarpunk projects, ecovillages, makerspaces, and regenerative organizations worldwide."
+	keywords="solarpunk projects, ecovillages, makerspaces, regenerative organizations, sustainable communities, green projects"
+/>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 	<!-- Header -->

@@ -5,9 +5,12 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { getQueueStats } from '$lib/server/harvest';
+import { requireAdmin } from '$lib/server/admin';
 
-export const load: PageServerLoad = async ({ url }) => {
-	// TODO: Add admin auth check
+export const load: PageServerLoad = async (event) => {
+	// Admin check is handled by hooks.server.ts, but double-check here
+	requireAdmin(event);
+	const { url } = event;
 
 	const status = url.searchParams.get('status') || 'PENDING';
 	const sourceId = url.searchParams.get('source') || '';

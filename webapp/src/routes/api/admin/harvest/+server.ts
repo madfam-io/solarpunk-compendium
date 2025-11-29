@@ -7,6 +7,7 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
+import { requireAdmin } from '$lib/server/admin';
 import {
 	runHarvestBySlug,
 	initializeSources,
@@ -15,9 +16,9 @@ import {
 } from '$lib/server/harvest';
 
 // GET /api/admin/harvest - Get queue stats and sources
-export const GET: RequestHandler = async ({ url, locals }) => {
-	// TODO: Add admin auth check
-	// if (!locals.user?.isAdmin) throw error(403, 'Unauthorized');
+export const GET: RequestHandler = async (event) => {
+	requireAdmin(event);
+	const { url } = event;
 
 	const action = url.searchParams.get('action');
 
@@ -55,10 +56,10 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 };
 
 // POST /api/admin/harvest - Run harvest actions
-export const POST: RequestHandler = async ({ request, locals }) => {
-	// TODO: Add admin auth check
+export const POST: RequestHandler = async (event) => {
+	requireAdmin(event);
 
-	const body = await request.json();
+	const body = await event.request.json();
 	const { action, sourceSlug } = body;
 
 	switch (action) {

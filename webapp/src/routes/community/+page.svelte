@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SEO from '$lib/components/SEO.svelte';
+
 	const chapters = [
 		{
 			name: 'Berlin Solarpunk',
@@ -52,10 +54,11 @@
 	];
 </script>
 
-<svelte:head>
-	<title>Community | The Solarpunk Almanac</title>
-	<meta name="description" content="Join local chapters building regenerative futures. Connect with solarpunks in your area." />
-</svelte:head>
+<SEO
+	title="Community"
+	description="Join local chapters building regenerative futures. Connect with solarpunks in your area."
+	keywords="solarpunk community, local chapters, regenerative futures, sustainable living groups, eco community"
+/>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 	<!-- Header -->

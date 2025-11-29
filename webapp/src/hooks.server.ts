@@ -7,9 +7,13 @@
 
 import type { Handle } from '@sveltejs/kit';
 import { JANUA_API_URL, JANUA_API_SECRET } from '$env/static/private';
+import { isAdminEmail } from '$lib/server/admin';
 
 // Routes that require authentication
 const protectedRoutes = ['/dashboard', '/profile', '/settings', '/directory/submit'];
+
+// Routes that require admin access
+const adminRoutes = ['/admin'];
 
 // Routes that redirect authenticated users
 const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
@@ -55,6 +59,28 @@ export const handle: Handle = async ({ event, resolve }) => {
 				status: 302,
 				headers: {
 					Location: `/login?redirect=${redirectUrl}`
+				}
+			});
+		}
+	}
+
+	// Check if accessing admin route without admin access
+	if (adminRoutes.some((route) => pathname.startsWith(route))) {
+		if (!event.locals.user) {
+			const redirectUrl = encodeURIComponent(pathname);
+			return new Response(null, {
+				status: 302,
+				headers: {
+					Location: `/login?redirect=${redirectUrl}`
+				}
+			});
+		}
+
+		if (!isAdminEmail(event.locals.user.email)) {
+			return new Response('Forbidden: Admin access required', {
+				status: 403,
+				headers: {
+					'Content-Type': 'text/plain'
 				}
 			});
 		}

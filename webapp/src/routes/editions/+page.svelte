@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SEO from '$lib/components/SEO.svelte';
+
 	export let data;
 
 	$: ({ currentEdition, pastEditions } = data);
@@ -24,13 +26,11 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Seasonal Editions | The Solarpunk Almanac</title>
-	<meta
-		name="description"
-		content="Quarterly guides aligned with solstices and equinoxes. Practical wisdom for regenerative living."
-	/>
-</svelte:head>
+<SEO
+	title="Seasonal Editions"
+	description="Quarterly guides aligned with solstices and equinoxes. Practical wisdom for regenerative living."
+	keywords="solarpunk editions, seasonal guides, quarterly almanac, solstice, equinox, regenerative living"
+/>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 	<!-- Header -->

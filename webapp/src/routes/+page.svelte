@@ -1,5 +1,6 @@
 <script lang="ts">
 	import SeasonIndicator from '$lib/components/SeasonIndicator.svelte';
+	import SEO from '$lib/components/SEO.svelte';
 
 	let email = '';
 	let signupMessage = '';
@@ -44,10 +45,11 @@
 	];
 </script>
 
-<svelte:head>
-	<title>The Solarpunk Almanac | Practical Wisdom for Regenerative Living</title>
-	<meta name="description" content="Your guide to building tomorrow, today. Seasonal wisdom, practical tools, and a global community working toward flourishing futures." />
-</svelte:head>
+<SEO
+	title="The Solarpunk Almanac"
+	description="Your guide to building tomorrow, today. Seasonal wisdom, practical tools, and a global community working toward flourishing futures."
+	keywords="solarpunk, sustainability, regenerative living, community resilience, renewable energy, permaculture, climate action"
+/>
 
 <!-- Hero Section -->
 <section class="min-h-[90vh] flex flex-col items-center justify-center px-4 py-20">

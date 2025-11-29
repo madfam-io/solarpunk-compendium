@@ -7,11 +7,13 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
+import { requireAdmin } from '$lib/server/admin';
 import type { HarvestStatus } from '@prisma/client';
 
 // GET /api/admin/harvest/queue - List queue items
-export const GET: RequestHandler = async ({ url }) => {
-	// TODO: Add admin auth check
+export const GET: RequestHandler = async (event) => {
+	requireAdmin(event);
+	const { url } = event;
 
 	const status = url.searchParams.get('status') as HarvestStatus | null;
 	const sourceId = url.searchParams.get('sourceId');
@@ -62,10 +64,10 @@ export const GET: RequestHandler = async ({ url }) => {
 };
 
 // PATCH /api/admin/harvest/queue - Bulk update items
-export const PATCH: RequestHandler = async ({ request }) => {
-	// TODO: Add admin auth check
+export const PATCH: RequestHandler = async (event) => {
+	requireAdmin(event);
 
-	const body = await request.json();
+	const body = await event.request.json();
 	const { ids, status, reviewNotes } = body;
 
 	if (!ids || !Array.isArray(ids) || ids.length === 0) {

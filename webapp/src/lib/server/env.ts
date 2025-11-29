@@ -33,6 +33,11 @@ export const config = {
 	app: {
 		url: env.APP_URL || 'http://localhost:5173',
 		env: env.NODE_ENV || 'development'
+	},
+
+	// Admin access (comma-separated list of admin emails)
+	admin: {
+		emails: (env.ADMIN_EMAILS || 'admin@solarpunkalmanac.org').split(',').map((e) => e.trim().toLowerCase())
 	}
 };
 
