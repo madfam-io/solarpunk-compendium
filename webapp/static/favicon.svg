@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#01D4A9;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F4A020;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4CAF50;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Sun circle -->
+  <circle cx="50" cy="50" r="45" fill="url(#grad)" />
+  <!-- Leaf/sprout in center -->
+  <path d="M50 25 C50 25, 35 45, 50 60 C65 45, 50 25, 50 25" fill="#fff" opacity="0.9"/>
+  <path d="M50 60 L50 75" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+</svg>
