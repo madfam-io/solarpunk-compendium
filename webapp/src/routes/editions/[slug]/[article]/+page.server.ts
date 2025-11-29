@@ -55,6 +55,12 @@ export const load: PageServerLoad = async ({ params }) => {
 	const prevArticle = currentIndex > 0 ? allArticles[currentIndex - 1] : null;
 	const nextArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
 
+	// Normalize 'fall' -> 'autumn' for Codex design system compatibility
+	const normalizeSeason = (season: string) => {
+		const s = season.toLowerCase();
+		return s === 'fall' ? 'autumn' : s;
+	};
+
 	return {
 		article: {
 			id: article.id,
@@ -72,7 +78,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		edition: {
 			slug: article.edition.slug,
 			title: article.edition.title,
-			season: article.edition.season.toLowerCase(),
+			season: normalizeSeason(article.edition.season),
 			year: article.edition.year
 		},
 		navigation: {

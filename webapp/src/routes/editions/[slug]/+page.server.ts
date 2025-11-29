@@ -38,11 +38,17 @@ export const load: PageServerLoad = async ({ params }) => {
 		throw error(404, 'Edition not found');
 	}
 
+	// Normalize 'fall' -> 'autumn' for Codex design system compatibility
+	const normalizeSeason = (season: string) => {
+		const s = season.toLowerCase();
+		return s === 'fall' ? 'autumn' : s;
+	};
+
 	return {
 		edition: {
 			id: edition.id,
 			slug: edition.slug,
-			season: edition.season.toLowerCase(),
+			season: normalizeSeason(edition.season),
 			year: edition.year,
 			title: edition.title,
 			tagline: edition.tagline,

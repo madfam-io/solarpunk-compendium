@@ -17,11 +17,17 @@ export const load: PageServerLoad = async () => {
 		orderBy: [{ year: 'desc' }, { season: 'desc' }]
 	});
 
+	// Normalize 'fall' -> 'autumn' for Codex design system compatibility
+	const normalizeSeason = (season: string) => {
+		const s = season.toLowerCase();
+		return s === 'fall' ? 'autumn' : s;
+	};
+
 	// Transform data for the frontend
 	const transformedEditions = editions.map((e) => ({
 		id: e.id,
 		slug: e.slug,
-		season: e.season.toLowerCase(),
+		season: normalizeSeason(e.season),
 		year: e.year,
 		title: e.title,
 		tagline: e.tagline,

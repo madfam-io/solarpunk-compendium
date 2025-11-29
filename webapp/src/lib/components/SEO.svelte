@@ -15,7 +15,7 @@
 
 	// Open Graph
 	export let ogType: 'website' | 'article' = 'website';
-	export let ogImage = '/og-image.png';
+	export let ogImage = '/og-image.svg';
 	export let ogUrl = '';
 
 	// Twitter

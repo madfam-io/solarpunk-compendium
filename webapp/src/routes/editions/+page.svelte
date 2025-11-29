@@ -8,7 +8,7 @@
 	const seasons: Record<string, { name: string; color: string; icon: string; months: string }> = {
 		spring: { name: 'Spring', color: 'bg-green-500', icon: '🌱', months: 'Mar-May' },
 		summer: { name: 'Summer', color: 'bg-yellow-500', icon: '☀️', months: 'Jun-Aug' },
-		fall: { name: 'Fall', color: 'bg-orange-500', icon: '🍂', months: 'Sep-Nov' },
+		autumn: { name: 'Autumn', color: 'bg-orange-500', icon: '🍂', months: 'Sep-Nov' },
 		winter: { name: 'Winter', color: 'bg-blue-500', icon: '❄️', months: 'Dec-Feb' }
 	};
 
