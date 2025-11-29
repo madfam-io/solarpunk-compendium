@@ -120,15 +120,27 @@
 						Password
 					</label>
 					<div class="relative">
-						<input
-							id="password"
-							type={showPassword ? 'text' : 'password'}
-							bind:value={password}
-							required
-							autocomplete="new-password"
-							class="input pr-10"
-							placeholder="••••••••"
-						/>
+						{#if showPassword}
+							<input
+								id="password"
+								type="text"
+								bind:value={password}
+								required
+								autocomplete="new-password"
+								class="input pr-10"
+								placeholder="••••••••"
+							/>
+						{:else}
+							<input
+								id="password"
+								type="password"
+								bind:value={password}
+								required
+								autocomplete="new-password"
+								class="input pr-10"
+								placeholder="••••••••"
+							/>
+						{/if}
 						<button
 							type="button"
 							on:click={() => showPassword = !showPassword}

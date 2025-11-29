@@ -22,10 +22,19 @@
 	export let twitterCard: 'summary' | 'summary_large_image' = 'summary_large_image';
 	export let twitterSite = '@solarpunkalmanac';
 
-	// Article-specific (optional)
+	// Article-specific (optional) - supports both naming conventions
 	export let author = '';
 	export let publishedTime = '';
 	export let section = '';
+	// Aliases for article-prefixed props
+	export let articleAuthor: string | null = null;
+	export let articleSection: string | null = null;
+	export let articlePublishedTime: string | null = null;
+
+	// Use article-prefixed props if provided, otherwise fall back to non-prefixed
+	$: effectiveAuthor = articleAuthor || author;
+	$: effectiveSection = articleSection || section;
+	$: effectivePublishedTime = articlePublishedTime || publishedTime;
 
 	// Canonical URL
 	export let canonical = '';
@@ -68,14 +77,14 @@
 
 	<!-- Article-specific -->
 	{#if ogType === 'article'}
-		{#if author}
-			<meta property="article:author" content={author} />
+		{#if effectiveAuthor}
+			<meta property="article:author" content={effectiveAuthor} />
 		{/if}
-		{#if publishedTime}
-			<meta property="article:published_time" content={publishedTime} />
+		{#if effectivePublishedTime}
+			<meta property="article:published_time" content={effectivePublishedTime} />
 		{/if}
-		{#if section}
-			<meta property="article:section" content={section} />
+		{#if effectiveSection}
+			<meta property="article:section" content={effectiveSection} />
 		{/if}
 	{/if}
 

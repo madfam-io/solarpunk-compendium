@@ -125,6 +125,22 @@
 			maximumFractionDigits: 0
 		}).format(value);
 	}
+
+	// Type-safe setters
+	type RoofType = typeof roofType;
+	function setRoofType(value: string) {
+		roofType = value as RoofType;
+	}
+
+	type UsageType = typeof usageType;
+	function setUsageType(value: string) {
+		usageType = value as UsageType;
+	}
+
+	type BudgetRange = typeof budgetRange;
+	function setBudgetRange(value: string) {
+		budgetRange = value as BudgetRange;
+	}
 </script>
 
 <svelte:head>
@@ -189,7 +205,7 @@
 								{ value: 'flat', label: 'Flat/Gravel', coef: '70%' }
 							] as option}
 								<button
-									on:click={() => (roofType = option.value as typeof roofType)}
+									on:click={() => setRoofType(option.value)}
 									class="p-2 rounded-lg text-sm transition-colors
 										{roofType === option.value
 										? 'bg-solarpunk-teal text-slate-900'
@@ -271,7 +287,7 @@
 								{ value: 'all-non-potable', label: 'All Non-Potable', icon: '🏠' }
 							] as option}
 								<button
-									on:click={() => (usageType = option.value as typeof usageType)}
+									on:click={() => setUsageType(option.value)}
 									class="w-full p-3 rounded-lg text-left flex items-center gap-3 transition-colors
 										{usageType === option.value
 										? 'bg-solarpunk-teal/10 border border-solarpunk-teal/30'
@@ -310,7 +326,7 @@
 								{ value: 'premium', label: 'Premium' }
 							] as option}
 								<button
-									on:click={() => (budgetRange = option.value as typeof budgetRange)}
+									on:click={() => setBudgetRange(option.value)}
 									class="px-3 py-2 rounded-lg text-sm font-medium transition-colors
 										{budgetRange === option.value
 										? 'bg-solarpunk-teal text-slate-900'

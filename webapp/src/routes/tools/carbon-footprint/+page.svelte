@@ -150,6 +150,17 @@
 		};
 		return tips[category] || [];
 	}
+
+	// Type-safe setters
+	type DietType = typeof dietType;
+	function setDietType(value: string) {
+		dietType = value as DietType;
+	}
+
+	type ShoppingHabit = typeof shoppingHabit;
+	function setShoppingHabit(value: string) {
+		shoppingHabit = value as ShoppingHabit;
+	}
 </script>
 
 <svelte:head>
@@ -378,7 +389,7 @@
 								{ value: 'heavy-meat', label: 'Heavy Meat' }
 							] as option}
 								<button
-									on:click={() => (dietType = option.value as typeof dietType)}
+									on:click={() => setDietType(option.value)}
 									class="px-3 py-2 rounded-lg text-sm font-medium transition-colors
 										{dietType === option.value
 										? 'bg-solarpunk-teal text-slate-900'
@@ -446,7 +457,7 @@
 								{ value: 'frequent', label: 'Frequent', desc: 'Regular shopping' }
 							] as option}
 								<button
-									on:click={() => (shoppingHabit = option.value as typeof shoppingHabit)}
+									on:click={() => setShoppingHabit(option.value)}
 									class="p-3 rounded-lg text-sm transition-colors text-center
 										{shoppingHabit === option.value
 										? 'bg-solarpunk-teal text-slate-900'

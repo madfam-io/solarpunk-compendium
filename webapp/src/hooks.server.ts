@@ -6,8 +6,12 @@
  */
 
 import type { Handle } from '@sveltejs/kit';
-import { JANUA_API_URL, JANUA_API_SECRET } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { isAdminEmail } from '$lib/server/admin';
+
+// Get Janua config from environment (with fallbacks for dev)
+const JANUA_API_URL = env.JANUA_API_URL || 'http://localhost:8001';
+const JANUA_API_SECRET = env.JANUA_API_SECRET || '';
 
 // Routes that require authentication
 const protectedRoutes = ['/dashboard', '/profile', '/settings', '/directory/submit'];

@@ -18,14 +18,20 @@
 	import { writable, derived } from 'svelte/store';
 	import { browser } from '$app/environment';
 
-	// Props
+	// Props - season accepts string for flexibility with server data
 	export let mode: ReadingMode = 'flow';
-	export let season: Season = 'auto';
+	export let season: Season | string = 'auto';
 	export let sounds: boolean = false;
+
+	// Validate and normalize season prop
+	function normalizeSeason(s: Season | string): Season {
+		const valid: Season[] = ['winter', 'spring', 'summer', 'autumn', 'auto'];
+		return valid.includes(s as Season) ? (s as Season) : 'auto';
+	}
 
 	// Stores
 	const modeStore = writable<ReadingMode>(mode);
-	const seasonStore = writable<Season>(season);
+	const seasonStore = writable<Season>(normalizeSeason(season));
 	const soundsStore = writable<boolean>(sounds);
 
 	/**

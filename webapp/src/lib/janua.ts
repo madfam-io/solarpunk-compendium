@@ -1,22 +1,130 @@
 /**
- * Janua Authentication Client
+ * Janua Authentication Client (Stub)
  *
  * Janua is MADFAM's self-hosted auth + monetization + email platform.
- * This module initializes the client for use throughout the app.
+ * This is a stub implementation until the SDK is available.
+ *
+ * TODO: Replace with actual @janua/typescript-sdk when available
  */
 
-import { createClient } from '@janua/typescript-sdk';
 import { browser } from '$app/environment';
 
-// Configuration from environment variables
-const JANUA_API_URL = import.meta.env.PUBLIC_JANUA_API_URL || 'http://localhost:8001';
-const JANUA_APP_ID = import.meta.env.PUBLIC_JANUA_APP_ID || 'solarpunk-almanac';
+// Type definitions for Janua responses
+export interface JanuaUser {
+	id: string;
+	email: string;
+	firstName?: string;
+	lastName?: string;
+	avatar?: string;
+	emailVerified: boolean;
+	createdAt: string;
+	metadata?: Record<string, unknown>;
+}
 
-// Create the Janua client
-export const janua = createClient({
-	baseURL: JANUA_API_URL,
-	appId: JANUA_APP_ID
-});
+export interface JanuaOrganization {
+	id: string;
+	name: string;
+	slug: string;
+	logo?: string;
+	role: 'owner' | 'admin' | 'member';
+}
+
+export interface JanuaSession {
+	id: string;
+	userAgent: string;
+	ipAddress: string;
+	createdAt: string;
+	lastActiveAt: string;
+	isCurrent: boolean;
+}
+
+export interface AuthResponse {
+	user: JanuaUser;
+	accessToken: string;
+	refreshToken: string;
+}
+
+// Stub client implementation
+interface JanuaClient {
+	setTokens: (tokens: { accessToken: string; refreshToken: string }) => void;
+	auth: {
+		signUp: (params: {
+			email: string;
+			password: string;
+			first_name?: string;
+			last_name?: string;
+		}) => Promise<AuthResponse>;
+		signIn: (params: { email: string; password: string }) => Promise<AuthResponse>;
+		signOut: () => Promise<void>;
+		refreshTokens: (params: { refreshToken: string }) => Promise<AuthResponse>;
+		getOAuthUrl: (params: { provider: string }) => Promise<{ url: string }>;
+		handleOAuthCallback: (params: {
+			provider: string;
+			code: string;
+			state?: string;
+		}) => Promise<AuthResponse>;
+		requestPasswordReset: (params: { email: string }) => Promise<void>;
+		resetPassword: (params: { token: string; password: string }) => Promise<void>;
+		requestEmailVerification: (params: { email: string }) => Promise<void>;
+	};
+	users: {
+		getCurrentUser: () => Promise<JanuaUser>;
+		updateUser: (params: {
+			first_name?: string;
+			last_name?: string;
+			avatar?: string;
+		}) => Promise<JanuaUser>;
+		updatePassword: (params: {
+			current_password: string;
+			new_password: string;
+		}) => Promise<void>;
+	};
+	sessions: {
+		getActiveSessions: () => Promise<JanuaSession[]>;
+		revokeSession: (params: { sessionId: string }) => Promise<void>;
+	};
+}
+
+// Create stub client
+function createStubClient(): JanuaClient {
+	const notImplemented = (method: string) => {
+		return () => {
+			console.warn(`[Janua Stub] ${method} not implemented - SDK not available`);
+			throw new Error(`Janua SDK not available: ${method}`);
+		};
+	};
+
+	return {
+		setTokens: () => {
+			// No-op in stub
+		},
+		auth: {
+			signUp: notImplemented('auth.signUp'),
+			signIn: notImplemented('auth.signIn'),
+			signOut: async () => {
+				// Allow signout to succeed silently
+			},
+			refreshTokens: notImplemented('auth.refreshTokens'),
+			getOAuthUrl: notImplemented('auth.getOAuthUrl'),
+			handleOAuthCallback: notImplemented('auth.handleOAuthCallback'),
+			requestPasswordReset: notImplemented('auth.requestPasswordReset'),
+			resetPassword: notImplemented('auth.resetPassword'),
+			requestEmailVerification: notImplemented('auth.requestEmailVerification')
+		},
+		users: {
+			getCurrentUser: notImplemented('users.getCurrentUser'),
+			updateUser: notImplemented('users.updateUser'),
+			updatePassword: notImplemented('users.updatePassword')
+		},
+		sessions: {
+			getActiveSessions: notImplemented('sessions.getActiveSessions'),
+			revokeSession: notImplemented('sessions.revokeSession')
+		}
+	};
+}
+
+// Create the Janua client (stub)
+export const janua = createStubClient();
 
 // Token management helpers
 export const tokenStorage = {
@@ -56,38 +164,3 @@ export const tokenStorage = {
 		return false;
 	}
 };
-
-// Type definitions for Janua responses
-export interface JanuaUser {
-	id: string;
-	email: string;
-	firstName?: string;
-	lastName?: string;
-	avatar?: string;
-	emailVerified: boolean;
-	createdAt: string;
-	metadata?: Record<string, unknown>;
-}
-
-export interface JanuaOrganization {
-	id: string;
-	name: string;
-	slug: string;
-	logo?: string;
-	role: 'owner' | 'admin' | 'member';
-}
-
-export interface JanuaSession {
-	id: string;
-	userAgent: string;
-	ipAddress: string;
-	createdAt: string;
-	lastActiveAt: string;
-	isCurrent: boolean;
-}
-
-export interface AuthResponse {
-	user: JanuaUser;
-	accessToken: string;
-	refreshToken: string;
-}

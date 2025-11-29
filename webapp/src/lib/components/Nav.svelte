@@ -24,6 +24,13 @@
 		userMenuOpen = false;
 		await auth.signOut('/');
 	}
+
+	function handleWindowClick(e: MouseEvent) {
+		const target = e.target as HTMLElement;
+		if (userMenuOpen && !target.closest('.relative')) {
+			userMenuOpen = false;
+		}
+	}
 </script>
 
 <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5">
@@ -198,8 +205,4 @@
 </nav>
 
 <!-- Click outside to close menus -->
-<svelte:window on:click={(e) => {
-	if (userMenuOpen && !(e.target as HTMLElement).closest('.relative')) {
-		userMenuOpen = false;
-	}
-}} />
+<svelte:window on:click={handleWindowClick} />
