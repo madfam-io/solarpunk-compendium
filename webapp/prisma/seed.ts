@@ -1361,6 +1361,29 @@ This is the solarpunk vision made personal: homes that connect us to nature rath
 	console.log('Created Spring 2026 edition (draft)');
 
 	// ============================================
+	// SUMMER 2026 EDITION (Framework)
+	// ============================================
+	console.log('Creating Summer 2026 edition framework...');
+
+	const summerEdition = await prisma.edition.upsert({
+		where: { slug: 'summer-2026' },
+		update: {},
+		create: {
+			slug: 'summer-2026',
+			title: 'Abundance',
+			season: 'SUMMER',
+			year: 2026,
+			tagline: 'The longest light',
+			description:
+				'At the peak of the growing season, we celebrate abundance—productive gardens, thriving communities, and the energy of the sun at its zenith.',
+			status: 'DRAFT',
+			publishedAt: new Date('2026-06-21')
+		}
+	});
+
+	console.log('Created Summer 2026 edition (draft)');
+
+	// ============================================
 	// FALL 2026 EDITION (Framework with saved articles)
 	// ============================================
 	console.log('Creating Fall 2026 edition framework...');
