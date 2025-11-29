@@ -1,0 +1,335 @@
+/**
+ * Codex Typography
+ *
+ * Print-inspired typography for digital reading.
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE TYPOGRAPHY
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose {
+	font-family: var(--codex-font-body);
+	font-size: var(--codex-text-base);
+	line-height: var(--codex-leading-relaxed);
+	color: var(--codex-ink-black);
+	max-width: var(--codex-measure-normal);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADINGS
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose h1,
+.codex-prose h2,
+.codex-prose h3,
+.codex-prose h4,
+.codex-prose h5,
+.codex-prose h6 {
+	font-family: var(--codex-font-display);
+	font-weight: 600;
+	line-height: var(--codex-leading-tight);
+	color: var(--codex-ink-black);
+	margin-top: 1.5em;
+	margin-bottom: 0.5em;
+}
+
+.codex-prose h1 {
+	font-size: var(--codex-text-4xl);
+	font-weight: 700;
+	margin-top: 0;
+}
+
+.codex-prose h2 {
+	font-size: var(--codex-text-3xl);
+}
+
+.codex-prose h3 {
+	font-size: var(--codex-text-2xl);
+}
+
+.codex-prose h4 {
+	font-size: var(--codex-text-xl);
+}
+
+.codex-prose h5 {
+	font-size: var(--codex-text-lg);
+}
+
+.codex-prose h6 {
+	font-size: var(--codex-text-base);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PARAGRAPHS & BODY TEXT
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose p {
+	margin-bottom: 1.25em;
+	text-align: justify;
+	hyphens: auto;
+}
+
+/* First paragraph after heading - no indent */
+.codex-prose h1 + p,
+.codex-prose h2 + p,
+.codex-prose h3 + p,
+.codex-prose h4 + p {
+	text-indent: 0;
+}
+
+/* Subsequent paragraphs - indent (traditional book style) */
+.codex-prose p + p {
+	text-indent: 1.5em;
+	margin-top: -0.5em;
+}
+
+/* Drop cap for first paragraph of article */
+.codex-prose > p:first-of-type::first-letter {
+	float: left;
+	font-family: var(--codex-font-display);
+	font-size: 3.5em;
+	line-height: 0.8;
+	padding-right: 0.1em;
+	color: var(--codex-accent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LINKS
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose a {
+	color: var(--codex-ink-forest);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+	transition: color var(--codex-duration-fast) var(--codex-ease-default);
+}
+
+.codex-prose a:hover {
+	color: var(--codex-accent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BLOCKQUOTES
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose blockquote {
+	margin: var(--codex-space-8) 0;
+	padding: var(--codex-space-4) var(--codex-space-6);
+	border-left: 3px solid var(--codex-accent);
+	background: var(--codex-paper-aged);
+	font-style: italic;
+}
+
+.codex-prose blockquote p:last-child {
+	margin-bottom: 0;
+}
+
+/* Pull quote (larger, centered) */
+.codex-pullquote {
+	margin: var(--codex-space-12) var(--codex-space-8);
+	padding: var(--codex-space-8);
+	text-align: center;
+	font-family: var(--codex-font-display);
+	font-size: var(--codex-text-xl);
+	font-style: italic;
+	color: var(--codex-ink-sepia);
+	border-top: var(--codex-rule-double);
+	border-bottom: var(--codex-rule-double);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LISTS
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose ul,
+.codex-prose ol {
+	margin: var(--codex-space-4) 0;
+	padding-left: var(--codex-space-6);
+}
+
+.codex-prose li {
+	margin-bottom: var(--codex-space-2);
+}
+
+.codex-prose ul {
+	list-style-type: disc;
+}
+
+.codex-prose ul ul {
+	list-style-type: circle;
+}
+
+.codex-prose ol {
+	list-style-type: decimal;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CODE
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose code {
+	font-family: var(--codex-font-mono);
+	font-size: 0.9em;
+	padding: 0.1em 0.3em;
+	background: var(--codex-paper-aged);
+	border-radius: var(--codex-radius-subtle);
+}
+
+.codex-prose pre {
+	margin: var(--codex-space-6) 0;
+	padding: var(--codex-space-4);
+	background: var(--codex-paper-dark);
+	color: var(--codex-paper-cream);
+	border-radius: var(--codex-radius-soft);
+	overflow-x: auto;
+	font-size: var(--codex-text-sm);
+}
+
+.codex-prose pre code {
+	background: transparent;
+	padding: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FIGURES & IMAGES
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose figure {
+	margin: var(--codex-space-8) 0;
+}
+
+.codex-prose img {
+	max-width: 100%;
+	height: auto;
+	border-radius: var(--codex-radius-soft);
+}
+
+.codex-prose figcaption {
+	margin-top: var(--codex-space-2);
+	font-size: var(--codex-text-sm);
+	color: var(--codex-ink-muted);
+	font-style: italic;
+	text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HORIZONTAL RULES / SECTION BREAKS
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose hr {
+	border: none;
+	margin: var(--codex-space-12) auto;
+	width: 30%;
+	height: 1px;
+	background: var(--codex-ink-light);
+}
+
+/* Ornamental break with fleuron */
+.codex-section-break {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: var(--codex-space-12) 0;
+	color: var(--codex-ink-muted);
+}
+
+.codex-section-break::before,
+.codex-section-break::after {
+	content: '';
+	flex: 1;
+	height: 1px;
+	background: var(--codex-ink-light);
+	max-width: 4rem;
+}
+
+.codex-section-break::before {
+	margin-right: var(--codex-space-4);
+}
+
+.codex-section-break::after {
+	margin-left: var(--codex-space-4);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TABLES
+   ═══════════════════════════════════════════════════════════════ */
+
+.codex-prose table {
+	width: 100%;
+	margin: var(--codex-space-6) 0;
+	border-collapse: collapse;
+	font-size: var(--codex-text-sm);
+}
+
+.codex-prose th,
+.codex-prose td {
+	padding: var(--codex-space-2) var(--codex-space-3);
+	text-align: left;
+	border-bottom: var(--codex-border-hairline);
+}
+
+.codex-prose th {
+	font-family: var(--codex-font-ui);
+	font-weight: 600;
+	text-transform: uppercase;
+	font-size: var(--codex-text-xs);
+	letter-spacing: 0.05em;
+	color: var(--codex-ink-muted);
+}
+
+.codex-prose tbody tr:hover {
+	background: var(--codex-paper-aged);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SPECIAL ELEMENTS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Byline / Author info */
+.codex-byline {
+	font-family: var(--codex-font-ui);
+	font-size: var(--codex-text-sm);
+	color: var(--codex-ink-muted);
+	margin-bottom: var(--codex-space-8);
+}
+
+/* Article subtitle */
+.codex-subtitle {
+	font-size: var(--codex-text-xl);
+	font-style: italic;
+	color: var(--codex-ink-sepia);
+	margin-top: -0.5em;
+	margin-bottom: var(--codex-space-6);
+}
+
+/* Lead paragraph (larger first paragraph) */
+.codex-lead {
+	font-size: var(--codex-text-lg);
+	line-height: var(--codex-leading-loose);
+	color: var(--codex-ink-sepia);
+}
+
+/* Small caps for emphasis */
+.codex-smallcaps {
+	font-variant: small-caps;
+	letter-spacing: 0.05em;
+}
+
+/* Footnote reference */
+.codex-footnote-ref {
+	font-size: var(--codex-text-xs);
+	vertical-align: super;
+	color: var(--codex-accent);
+}
+
+/* Footnote content */
+.codex-footnotes {
+	margin-top: var(--codex-space-12);
+	padding-top: var(--codex-space-4);
+	border-top: var(--codex-rule-simple);
+	font-size: var(--codex-text-sm);
+}
