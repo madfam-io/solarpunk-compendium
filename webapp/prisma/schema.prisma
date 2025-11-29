@@ -1,0 +1,412 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  avatar        String?
+  bio           String?
+  location      String?
+  website       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  sessions      Session[]
+  projects      Project[]
+  savedProjects SavedProject[]
+  chapters      ChapterMember[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+
+  user User @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// ============================================
+// PROJECT DIRECTORY
+// ============================================
+
+model Project {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  tagline     String
+  description String
+  website     String?
+  location    String?
+  coordinates Json?         // { lat, lng }
+  logo        String?
+  coverImage  String?
+  status      ProjectStatus @default(DRAFT)
+  featured    Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  submittedById String
+  submittedBy   User             @relation(fields: [submittedById], references: [id])
+  categories    ProjectCategory[]
+  sdgs          ProjectSDG[]
+  savedBy       SavedProject[]
+  tags          ProjectTag[]
+
+  @@index([status])
+  @@index([featured])
+  @@map("projects")
+}
+
+enum ProjectStatus {
+  DRAFT
+  PENDING
+  PUBLISHED
+  ARCHIVED
+}
+
+model Category {
+  id          String            @id @default(cuid())
+  slug        String            @unique
+  name        String
+  description String?
+  icon        String?
+  color       String?
+  projects    ProjectCategory[]
+
+  @@map("categories")
+}
+
+model ProjectCategory {
+  projectId  String
+  categoryId String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, categoryId])
+  @@map("project_categories")
+}
+
+model SDG {
+  id       Int          @id // 1-17
+  name     String
+  icon     String?
+  color    String
+  projects ProjectSDG[]
+
+  @@map("sdgs")
+}
+
+model ProjectSDG {
+  projectId String
+  sdgId     Int
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sdg       SDG     @relation(fields: [sdgId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, sdgId])
+  @@map("project_sdgs")
+}
+
+model Tag {
+  id       String       @id @default(cuid())
+  name     String       @unique
+  projects ProjectTag[]
+
+  @@map("tags")
+}
+
+model ProjectTag {
+  projectId String
+  tagId     String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, tagId])
+  @@map("project_tags")
+}
+
+model SavedProject {
+  userId    String
+  projectId String
+  savedAt   DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([userId, projectId])
+  @@map("saved_projects")
+}
+
+// ============================================
+// SEASONAL EDITIONS
+// ============================================
+
+model Edition {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  season      Season
+  year        Int
+  tagline     String?
+  description String?
+  coverImage  String?
+  publishedAt DateTime?
+  status      EditionStatus @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  articles Article[]
+
+  @@unique([season, year])
+  @@map("editions")
+}
+
+enum Season {
+  SPRING // March equinox
+  SUMMER // June solstice
+  FALL   // September equinox
+  WINTER // December solstice
+}
+
+enum EditionStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Article {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  subtitle    String?
+  excerpt     String?
+  content     String        // MDX content
+  coverImage  String?
+  author      String?
+  readTime    Int?          // minutes
+  order       Int           @default(0)
+  status      ArticleStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  editionId String
+  edition   Edition         @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  section   ArticleSection?
+
+  @@index([editionId, order])
+  @@map("articles")
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum ArticleSection {
+  OVERVIEW
+  GROW        // Food & Agriculture
+  BUILD       // Shelter & Infrastructure
+  POWER       // Energy & Technology
+  CONNECT     // Community & Organizing
+  THRIVE      // Health & Wellbeing
+  CREATE      // Art & Culture
+  LEARN       // Education & Skills
+}
+
+// ============================================
+// CHAPTERS / COMMUNITY
+// ============================================
+
+model Chapter {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  description String?
+  location    String
+  coordinates Json?
+  website     String?
+  logo        String?
+  status      ChapterStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  members ChapterMember[]
+
+  @@map("chapters")
+}
+
+enum ChapterStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+}
+
+model ChapterMember {
+  userId    String
+  chapterId String
+  role      ChapterRole @default(MEMBER)
+  joinedAt  DateTime    @default(now())
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapter   Chapter     @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@id([userId, chapterId])
+  @@map("chapter_members")
+}
+
+enum ChapterRole {
+  MEMBER
+  ORGANIZER
+  LEAD
+}
+
+// ============================================
+// NEWSLETTER / WAITLIST
+// ============================================
+
+model Subscriber {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String?
+  source       String?   // landing, directory, edition, etc.
+  subscribedAt DateTime  @default(now())
+  confirmedAt  DateTime?
+  unsubscribed Boolean   @default(false)
+
+  @@map("subscribers")
+}
+
+// ============================================
+// CONTENT HARVESTING PIPELINE
+// ============================================
+
+model HarvestSource {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  type        SourceType
+  url         String?
+  description String?
+  config      Json?        // API keys, selectors, rate limits, etc.
+  mapping     Json?        // Field mapping: source -> our schema
+  schedule    String?      // Cron expression for auto-harvest
+  isActive    Boolean      @default(true)
+  priority    Int          @default(0) // Higher = process first
+  lastHarvest DateTime?
+  lastError   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  items HarvestItem[]
+
+  @@map("harvest_sources")
+}
+
+enum SourceType {
+  RSS          // RSS/Atom feeds
+  API          // REST APIs (GEN, OSM, etc.)
+  SCRAPE       // Web scraping (with permission)
+  SOCIAL       // Social media hashtags
+  FORM         // User submissions
+  MANUAL       // Manual curation
+  IMPORT       // Bulk data imports
+}
+
+model HarvestItem {
+  id           String        @id @default(cuid())
+  sourceId     String
+  externalId   String        // Dedupe key from source
+  externalUrl  String?       // Original URL
+
+  // Raw and processed data
+  rawData      Json          // Original data from source
+  normalized   Json?         // Mapped to our schema
+
+  // Classification
+  contentType  ContentType   @default(PROJECT)
+  quality      Int           @default(0) // 0-100 quality score
+
+  // Review workflow
+  status       HarvestStatus @default(PENDING)
+  reviewNotes  String?
+  reviewedById String?
+  reviewedAt   DateTime?
+
+  // If converted to content
+  projectId    String?       @unique
+  articleId    String?       @unique
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Relations
+  source HarvestSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, externalId])
+  @@index([status])
+  @@index([contentType])
+  @@index([quality])
+  @@map("harvest_items")
+}
+
+enum ContentType {
+  PROJECT      // Directory project
+  ARTICLE      // Edition article
+  EVENT        // Community event
+  RESOURCE     // Tool/resource link
+}
+
+enum HarvestStatus {
+  PENDING      // Awaiting review
+  APPROVED     // Ready to publish
+  REJECTED     // Not suitable
+  PUBLISHED    // Live on site
+  DUPLICATE    // Already exists
+  NEEDS_INFO   // Requires more data
+}
+
+// ============================================
+// CONTENT OBSERVATION & ANALYTICS
+// ============================================
+
+model ContentSignal {
+  id          String      @id @default(cuid())
+  type        SignalType
+  source      String      // Where observed (search, social, etc.)
+  value       String      // The signal (search term, hashtag, etc.)
+  count       Int         @default(1)
+  metadata    Json?       // Additional context
+  observedAt  DateTime    @default(now())
+
+  @@index([type, observedAt])
+  @@map("content_signals")
+}
+
+enum SignalType {
+  SEARCH_QUERY     // What users search for
+  TRENDING_TOPIC   // Social trends
+  CONTENT_GAP      // Missing content identified
+  USER_REQUEST     // Direct user requests
+  GEOGRAPHIC       // Location-based interest
+  SEASONAL         // Time-based patterns
+}

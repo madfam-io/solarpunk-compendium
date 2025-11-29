@@ -1,81 +1,150 @@
-The Solarpunk Compendium - Interactive Web Viewer
-This repository contains the source code for "The Solarpunk Compendium," a single-page, interactive web application designed to present the research from the "Solarpunk Paradigm Deep Dive" document. The project transforms a static PDF into a dynamic, bilingual, and aesthetically pleasing web experience.
+# The Solarpunk Almanac
 
-🚀 Features
-Fully Responsive: Adapts seamlessly to any screen size, from mobile phones to desktop monitors.
+**Practical wisdom for regenerative living**
 
-Bilingual Content: Instantly switch between English and Spanish for all text content.
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Content: CC BY-SA 4.0](https://img.shields.io/badge/Content-CC%20BY--SA%204.0-blue.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-Dynamic Theme Switching: Cycle between three beautiful themes:
+---
 
-☀️ Light Mode: Crisp and clean for bright environments.
+## What is This?
 
-🌙 Dark Mode: Easy on the eyes and striking in low light.
+The Solarpunk Almanac is a living ecosystem of knowledge, tools, and community that helps people and organizations build regenerative futures. We provide:
 
-💻 Auto Mode: Automatically syncs with your operating system's theme preference.
+- **Seasonal Editions** — Quarterly guides aligned with solstices and equinoxes
+- **Global Directory** — Projects, chapters, and organizations worldwide
+- **Practical Tools** — Guides, templates, and calculators for sustainable living
+- **Community Network** — Local chapters building regenerative futures together
 
-Glassmorphic UI: Modern, semi-transparent "glass" cards create a sense of depth and a visually stunning interface.
+## Vision
 
-Dynamic Content Rendering: All text and data are loaded from JavaScript objects, making content updates easy without altering the HTML structure.
+To become the definitive open infrastructure for the global solarpunk movement — an educational hub, coordination layer, and resource commons that helps millions learn, connect, and act.
 
-Interactive Navigation:
+---
 
-A sticky navigation bar provides easy access to all sections.
+## Project Structure
 
-"Scroll-spy" functionality automatically highlights the active navigation link as you scroll through the document.
+```
+solarpunk-compendium/
+├── index.html              # Landing page (almanac.solar)
+├── landing.html            # Landing page source
+├── compendium.html         # Original Solarpunk Compendium content
+├── CONTRIBUTING.md         # How to contribute
+├── SOLARPUNK_ALMANAC_INITIATIVE.md  # Full strategic blueprint
+├── docs/
+│   └── MISSION.md          # Mission, vision, and values
+└── assets/
+    ├── images/             # Image assets
+    └── icons/              # Icon assets
+```
 
-Smooth scrolling for a pleasant user experience.
+---
 
-Self-Contained: The entire application runs from a single index.html file with no external dependencies beyond Tailwind CSS and Google Fonts loaded via CDN.
+## Quick Start
 
-🛠️ Tech Stack
-HTML5: For the core structure and content.
+Simply open `index.html` in any modern web browser. No build process required.
 
-CSS3:
+- **Landing Page:** `index.html` — Email signup and project overview
+- **Compendium:** `compendium.html` — Full solarpunk knowledge base
 
-Tailwind CSS: Utilized for rapid, utility-first styling.
+---
 
-Custom CSS Variables: For advanced theme management and glassmorphism effects.
+## Current Features
 
-Vanilla JavaScript (ES6+): For all interactivity, including:
+### Landing Page (index.html)
+- Email capture for early subscribers
+- Season-aware design
+- Light/dark theme toggle
+- Mobile responsive
+- SDG alignment preview
 
-Theme and language switching.
+### Compendium (compendium.html)
+- Comprehensive solarpunk knowledge base
+- Bilingual content (English/Spanish)
+- Three-theme system (Light/Dark/Auto)
+- Glassmorphic UI design
+- 73 scholarly references
+- 8 major content sections
+- Interactive navigation with scroll-spy
 
-Dynamic HTML content generation from data objects.
+---
 
-Intersection Observer API for scroll-spy navigation.
+## Tech Stack
 
-📂 Project Structure
-All the logic, styling, and content are encapsulated within the index.html file:
+**Current (Static Site):**
+- HTML5
+- Tailwind CSS (CDN)
+- Vanilla JavaScript (ES6+)
+- Google Fonts (Inter, Orbitron)
 
-<style> block: Contains the theme configuration using CSS variables and other base styles.
+**Planned (Platform):**
+- SvelteKit or Astro
+- PostgreSQL + Directus CMS
+- Meilisearch
+- Mobile apps (React Native)
 
-<body> block: Holds the static HTML structure for the header, main content container, and footer.
+See [SOLARPUNK_ALMANAC_INITIATIVE.md](SOLARPUNK_ALMANAC_INITIATIVE.md) for the full technical roadmap.
 
-<script> block: Contains all the JavaScript code for:
+---
 
-langData and contentData objects holding the bilingual text.
+## Roadmap
 
-referencesData array for the works cited.
+### Phase 1: Seed (Current)
+- [x] Rebrand to Solarpunk Almanac
+- [x] Create landing page with email capture
+- [x] Document strategic vision
+- [ ] Secure almanac.solar domain
+- [ ] Launch newsletter
+- [ ] Establish social presence
 
-Event listeners for UI elements (theme/language toggles, navigation).
+### Phase 2: Sprout
+- [ ] Build MVP platform with CMS
+- [ ] First Seasonal Edition
+- [ ] Launch community spaces
+- [ ] First 5 chapters
 
-Functions to dynamically render content, apply themes, and manage UI state.
+### Phase 3: Grow
+- [ ] Mobile app companion
+- [ ] Print Annual Edition
+- [ ] Learning pathways
+- [ ] 25 chapters worldwide
 
-📖 How to Use
-Simply open the index.html file in any modern web browser. No build process or server is required.
+See the full roadmap in [SOLARPUNK_ALMANAC_INITIATIVE.md](SOLARPUNK_ALMANAC_INITIATIVE.md).
 
-📄 Content Source
-All the information presented in this web application is derived from the research document: "The Solarpunk Compendium: A Deep Dive into the Paradigm of a Sustainable Future". The goal of this project was to make that research more accessible and engaging.
+---
 
-🔮 Future Improvements
-Add More Content: Expand the JavaScript data objects with even more research, images, and resources.
+## Contributing
 
-Animations & Transitions: Implement subtle animations for section loading and theme changes to enhance the user experience.
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-Backend Integration: Connect to a headless CMS or a database to manage content more robustly.
+**Ways to contribute:**
+- Content (articles, translations, resources)
+- Code (platform development)
+- Community (start a chapter, host events)
+- Design (illustrations, UI improvements)
 
-Search Functionality: Add a search bar to quickly find terms and topics within the compendium.
+---
 
-⚖️ License
-This project is licensed under the MIT License. See the LICENSE file for details.
+## Documentation
+
+- [Strategic Blueprint](SOLARPUNK_ALMANAC_INITIATIVE.md) — Full initiative documentation
+- [Mission & Values](docs/MISSION.md) — Why we exist and what we believe
+- [Contributing Guide](CONTRIBUTING.md) — How to get involved
+
+---
+
+## License
+
+- **Code:** MIT License
+- **Content:** Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0)
+
+---
+
+## Connect
+
+- **Domain:** [almanac.solar](https://almanac.solar) (coming soon)
+- **Organization:** Innovaciones MADFAM
+
+---
+
+*"Move quietly and plant things."*

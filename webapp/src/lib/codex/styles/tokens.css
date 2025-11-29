@@ -1,0 +1,260 @@
+/**
+ * Codex Design System - Design Tokens
+ *
+ * Skeuomorphic design language for digital publications.
+ * These CSS custom properties form the foundation of the system.
+ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════
+     PAPER COLORS
+     ═══════════════════════════════════════════════════════════ */
+
+  --codex-paper-white: #faf8f5;
+  --codex-paper-cream: #f5f0e6;
+  --codex-paper-aged: #e8e0d0;
+  --codex-paper-kraft: #c9b99a;
+  --codex-paper-dark: #1a1a18; /* For dark mode / night reading */
+
+  /* ═══════════════════════════════════════════════════════════
+     INK COLORS
+     ═══════════════════════════════════════════════════════════ */
+
+  --codex-ink-black: #1a1a18;
+  --codex-ink-sepia: #3d3225;
+  --codex-ink-muted: #6b5f54;
+  --codex-ink-light: #9a8f84;
+
+  /* Accent inks */
+  --codex-ink-forest: #2d4a3e;
+  --codex-ink-rust: #b85c38;
+  --codex-ink-indigo: #3d4f7c;
+
+  /* ═══════════════════════════════════════════════════════════
+     SEASONAL ACCENT COLORS
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Winter Solstice (Dec 21) */
+  --codex-winter-frost: #4fc3f7;
+  --codex-winter-ice: #b3e5fc;
+  --codex-winter-pine: #2e5339;
+  --codex-winter-candle: #ffb74d;
+
+  /* Spring Equinox (Mar 20) */
+  --codex-spring-sprout: #7cb342;
+  --codex-spring-blossom: #f8bbd9;
+  --codex-spring-rain: #81d4fa;
+  --codex-spring-earth: #5d4037;
+
+  /* Summer Solstice (Jun 21) */
+  --codex-summer-gold: #f9a825;
+  --codex-summer-sun: #fff59d;
+  --codex-summer-sky: #4dd0e1;
+  --codex-summer-leaf: #4caf50;
+
+  /* Autumn Equinox (Sep 22) */
+  --codex-autumn-ember: #d84315;
+  --codex-autumn-ochre: #e65100;
+  --codex-autumn-wine: #7b1fa2;
+  --codex-autumn-bark: #4e342e;
+
+  /* ═══════════════════════════════════════════════════════════
+     CURRENT SEASON (Set by JS or server)
+     ═══════════════════════════════════════════════════════════ */
+
+  --codex-accent: var(--codex-winter-frost);
+  --codex-accent-soft: var(--codex-winter-ice);
+  --codex-season-ornament: var(--codex-winter-pine);
+
+  /* ═══════════════════════════════════════════════════════════
+     TYPOGRAPHY
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Font families */
+  --codex-font-body: 'Literata', 'Georgia', 'Times New Roman', serif;
+  --codex-font-display: 'Fraunces', 'Playfair Display', 'Georgia', serif;
+  --codex-font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+  --codex-font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Type scale (1.25 - Major Third) */
+  --codex-text-xs: 0.64rem; /* 10.24px */
+  --codex-text-sm: 0.8rem; /* 12.8px */
+  --codex-text-base: 1rem; /* 16px */
+  --codex-text-lg: 1.25rem; /* 20px */
+  --codex-text-xl: 1.563rem; /* 25px */
+  --codex-text-2xl: 1.953rem; /* 31.25px */
+  --codex-text-3xl: 2.441rem; /* 39px */
+  --codex-text-4xl: 3.052rem; /* 48.8px */
+  --codex-text-5xl: 3.815rem; /* 61px */
+
+  /* Line heights */
+  --codex-leading-tight: 1.25;
+  --codex-leading-snug: 1.375;
+  --codex-leading-normal: 1.5;
+  --codex-leading-relaxed: 1.625;
+  --codex-leading-loose: 1.8;
+
+  /* Measure (line length) */
+  --codex-measure-narrow: 45ch;
+  --codex-measure-normal: 65ch;
+  --codex-measure-wide: 80ch;
+
+  /* ═══════════════════════════════════════════════════════════
+     SPACING
+     ═══════════════════════════════════════════════════════════ */
+
+  --codex-space-1: 0.25rem; /* 4px */
+  --codex-space-2: 0.5rem; /* 8px */
+  --codex-space-3: 0.75rem; /* 12px */
+  --codex-space-4: 1rem; /* 16px */
+  --codex-space-5: 1.25rem; /* 20px */
+  --codex-space-6: 1.5rem; /* 24px */
+  --codex-space-8: 2rem; /* 32px */
+  --codex-space-10: 2.5rem; /* 40px */
+  --codex-space-12: 3rem; /* 48px */
+  --codex-space-16: 4rem; /* 64px */
+  --codex-space-20: 5rem; /* 80px */
+  --codex-space-24: 6rem; /* 96px */
+
+  /* Page margins */
+  --codex-margin-gutter: var(--codex-space-8); /* Inner/spine margin */
+  --codex-margin-fore: var(--codex-space-6); /* Outer edge margin */
+  --codex-margin-head: var(--codex-space-6); /* Top margin */
+  --codex-margin-foot: var(--codex-space-8); /* Bottom margin */
+
+  /* ═══════════════════════════════════════════════════════════
+     SHADOWS
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Page shadows */
+  --codex-shadow-page: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+
+  --codex-shadow-lifted: 0 4px 8px rgba(0, 0, 0, 0.08), 0 12px 32px rgba(0, 0, 0, 0.06);
+
+  --codex-shadow-floating: 0 8px 16px rgba(0, 0, 0, 0.1), 0 24px 48px rgba(0, 0, 0, 0.08);
+
+  /* Gutter shadow (spine) */
+  --codex-shadow-gutter: inset 8px 0 16px -8px rgba(0, 0, 0, 0.15);
+
+  /* Page edge shadow */
+  --codex-shadow-fore-edge: -2px 0 8px rgba(0, 0, 0, 0.05);
+
+  /* Inset for embossed effect */
+  --codex-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+  /* ═══════════════════════════════════════════════════════════
+     BORDERS & RULES
+     ═══════════════════════════════════════════════════════════ */
+
+  --codex-border-hairline: 0.5px solid var(--codex-ink-light);
+  --codex-border-thin: 1px solid var(--codex-ink-light);
+  --codex-border-thick: 2px solid var(--codex-ink-black);
+
+  /* Decorative rules */
+  --codex-rule-simple: 1px solid var(--codex-ink-light);
+  --codex-rule-double: 3px double var(--codex-ink-black);
+  --codex-rule-ornate: 1px solid var(--codex-ink-sepia);
+
+  /* Corner radius */
+  --codex-radius-subtle: 2px;
+  --codex-radius-soft: 4px;
+  --codex-radius-rounded: 8px;
+
+  /* ═══════════════════════════════════════════════════════════
+     TRANSITIONS
+     ═══════════════════════════════════════════════════════════ */
+
+  --codex-duration-instant: 100ms;
+  --codex-duration-fast: 200ms;
+  --codex-duration-normal: 300ms;
+  --codex-duration-slow: 500ms;
+  --codex-duration-page-turn: 400ms;
+
+  --codex-ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --codex-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --codex-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --codex-ease-page-turn: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* ═══════════════════════════════════════════════════════════
+     Z-INDEX SCALE
+     ═══════════════════════════════════════════════════════════ */
+
+  --codex-z-base: 0;
+  --codex-z-page: 10;
+  --codex-z-page-turning: 20;
+  --codex-z-bookmark: 30;
+  --codex-z-navigation: 40;
+  --codex-z-overlay: 50;
+  --codex-z-modal: 60;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SEASONAL THEME OVERRIDES
+   ═══════════════════════════════════════════════════════════════ */
+
+[data-season='winter'] {
+  --codex-accent: var(--codex-winter-frost);
+  --codex-accent-soft: var(--codex-winter-ice);
+  --codex-season-ornament: var(--codex-winter-pine);
+  --codex-paper-tint: #f8fafc; /* Cooler */
+}
+
+[data-season='spring'] {
+  --codex-accent: var(--codex-spring-sprout);
+  --codex-accent-soft: var(--codex-spring-blossom);
+  --codex-season-ornament: var(--codex-spring-earth);
+  --codex-paper-tint: #fafdf7; /* Fresh green tint */
+}
+
+[data-season='summer'] {
+  --codex-accent: var(--codex-summer-gold);
+  --codex-accent-soft: var(--codex-summer-sun);
+  --codex-season-ornament: var(--codex-summer-leaf);
+  --codex-paper-tint: #fffdf5; /* Sun-warmed */
+}
+
+[data-season='autumn'] {
+  --codex-accent: var(--codex-autumn-ember);
+  --codex-accent-soft: var(--codex-autumn-ochre);
+  --codex-season-ornament: var(--codex-autumn-bark);
+  --codex-paper-tint: #fdf8f3; /* Aged warmth */
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   READING MODE OVERRIDES
+   ═══════════════════════════════════════════════════════════════ */
+
+[data-reading-mode='focus'] {
+  --codex-margin-gutter: var(--codex-space-16);
+  --codex-margin-fore: var(--codex-space-16);
+}
+
+[data-reading-mode='codex'] {
+  --codex-margin-gutter: var(--codex-space-12);
+  --codex-margin-fore: var(--codex-space-8);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --codex-duration-instant: 0ms;
+    --codex-duration-fast: 0ms;
+    --codex-duration-normal: 0ms;
+    --codex-duration-slow: 0ms;
+    --codex-duration-page-turn: 0ms;
+  }
+}
+
+@media (prefers-contrast: high) {
+  :root {
+    --codex-paper-white: #ffffff;
+    --codex-paper-cream: #ffffff;
+    --codex-ink-black: #000000;
+    --codex-ink-sepia: #000000;
+    --codex-shadow-page: none;
+    --codex-shadow-lifted: none;
+  }
+}

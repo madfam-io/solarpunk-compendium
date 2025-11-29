@@ -1,0 +1,255 @@
+/* ═══════════════════════════════════════════════════════════════
+   Codex Design System
+   Skeuomorphic tokens for the reading experience
+   ═══════════════════════════════════════════════════════════════ */
+@import '$lib/codex/styles/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Codex Typography (after Tailwind for proper cascade) */
+@import '$lib/codex/styles/typography.css';
+
+@layer base {
+	:root {
+		--color-bg: 15 23 42; /* slate-900 */
+		--color-bg-dark: 2 6 23; /* slate-950 */
+		--color-text: 241 245 249; /* slate-100 */
+		--color-text-muted: 148 163 184; /* slate-400 */
+		--color-accent: 1 212 169; /* solarpunk-teal */
+		--color-accent-dark: 0 168 133;
+	}
+
+	.light {
+		--color-bg: 248 250 252; /* slate-50 */
+		--color-bg-dark: 241 245 249; /* slate-100 */
+		--color-text: 15 23 42; /* slate-900 */
+		--color-text-muted: 71 85 105; /* slate-600 */
+		--color-accent: 0 138 113;
+		--color-accent-dark: 0 125 99;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		@apply bg-slate-950 text-slate-100;
+		font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+	}
+
+	.light body {
+		@apply bg-slate-50 text-slate-900;
+	}
+}
+
+@layer components {
+	/* Glass morphism card */
+	.glass {
+		@apply bg-slate-900/70 backdrop-blur-xl border border-white/10 rounded-2xl;
+	}
+
+	.light .glass {
+		@apply bg-white/70 border-white/50;
+	}
+
+	/* Gradient text */
+	.gradient-text {
+		@apply bg-gradient-to-r from-solarpunk-teal via-solar-gold to-leaf-green bg-clip-text text-transparent;
+	}
+
+	/* Gradient border */
+	.gradient-border {
+		@apply relative;
+	}
+
+	.gradient-border::before {
+		content: '';
+		@apply absolute inset-0 rounded-2xl p-[2px];
+		background: linear-gradient(135deg, theme('colors.solarpunk-teal.DEFAULT'), theme('colors.solar-gold.DEFAULT'), theme('colors.leaf-green.DEFAULT'));
+		-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+	}
+
+	/* Button variants */
+	.btn {
+		@apply inline-flex items-center justify-center gap-2 px-4 py-2 font-medium rounded-lg transition-all duration-200;
+	}
+
+	.btn-primary {
+		@apply btn bg-solarpunk-teal text-slate-900 hover:bg-solarpunk-teal-600 hover:shadow-lg hover:shadow-solarpunk-teal/20;
+	}
+
+	.btn-secondary {
+		@apply btn bg-slate-800 text-slate-100 hover:bg-slate-700 border border-slate-700;
+	}
+
+	.light .btn-secondary {
+		@apply bg-white text-slate-900 hover:bg-slate-100 border-slate-200;
+	}
+
+	.btn-ghost {
+		@apply btn text-slate-400 hover:text-slate-100 hover:bg-slate-800/50;
+	}
+
+	.light .btn-ghost {
+		@apply text-slate-600 hover:text-slate-900 hover:bg-slate-100;
+	}
+
+	/* Input styling */
+	.input {
+		@apply w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500;
+		@apply focus:outline-none focus:border-solarpunk-teal focus:ring-2 focus:ring-solarpunk-teal/20;
+	}
+
+	.light .input {
+		@apply bg-white border-slate-200 text-slate-900 placeholder-slate-400;
+	}
+
+	/* Card */
+	.card {
+		@apply glass p-6;
+	}
+
+	/* Badge */
+	.badge {
+		@apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+	}
+
+	.badge-teal {
+		@apply badge bg-solarpunk-teal/20 text-solarpunk-teal;
+	}
+
+	.badge-gold {
+		@apply badge bg-solar-gold/20 text-solar-gold;
+	}
+
+	.badge-green {
+		@apply badge bg-leaf-green/20 text-leaf-green;
+	}
+
+	/* Season dots */
+	.season-dot {
+		@apply w-2 h-2 rounded-full opacity-30 transition-all;
+	}
+
+	.season-dot.active {
+		@apply opacity-100 shadow-lg;
+		box-shadow: 0 0 10px currentColor;
+	}
+
+	/* Skeleton loading */
+	.skeleton {
+		@apply animate-pulse bg-slate-800 rounded;
+	}
+
+	.light .skeleton {
+		@apply bg-slate-200;
+	}
+
+	/* ═══════════════════════════════════════════════════════════════
+	   Codex Component Helpers
+	   ═══════════════════════════════════════════════════════════════ */
+
+	/* Paper background for reading areas */
+	.codex-paper {
+		background-color: var(--codex-paper-cream);
+		color: var(--codex-ink-black);
+	}
+
+	.codex-paper-white {
+		background-color: var(--codex-paper-white);
+	}
+
+	.codex-paper-aged {
+		background-color: var(--codex-paper-aged);
+	}
+
+	/* Ink colors */
+	.codex-ink {
+		color: var(--codex-ink-black);
+	}
+
+	.codex-ink-sepia {
+		color: var(--codex-ink-sepia);
+	}
+
+	.codex-ink-muted {
+		color: var(--codex-ink-muted);
+	}
+
+	/* Seasonal accent */
+	.codex-accent {
+		color: var(--codex-accent);
+	}
+
+	.codex-accent-bg {
+		background-color: var(--codex-accent);
+	}
+
+	/* Reading container with proper measure */
+	.codex-reading {
+		font-family: var(--codex-font-body);
+		font-size: var(--codex-text-lg);
+		line-height: var(--codex-leading-relaxed);
+		max-width: var(--codex-measure-normal);
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	/* Display headings */
+	.codex-display {
+		font-family: var(--codex-font-display);
+	}
+
+	/* Page shadow effects */
+	.codex-shadow {
+		box-shadow: var(--codex-shadow-page);
+	}
+
+	.codex-shadow-lifted {
+		box-shadow: var(--codex-shadow-lifted);
+	}
+}
+
+@layer utilities {
+	/* Hide scrollbar but keep functionality */
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Custom scrollbar */
+	.scrollbar-thin {
+		scrollbar-width: thin;
+		scrollbar-color: theme('colors.solarpunk-teal.DEFAULT') transparent;
+	}
+
+	.scrollbar-thin::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.scrollbar-thin::-webkit-scrollbar-track {
+		@apply bg-transparent;
+	}
+
+	.scrollbar-thin::-webkit-scrollbar-thumb {
+		@apply bg-solarpunk-teal/60 rounded-full;
+	}
+
+	/* Focus ring */
+	.focus-ring {
+		@apply focus:outline-none focus:ring-2 focus:ring-solarpunk-teal focus:ring-offset-2 focus:ring-offset-slate-950;
+	}
+
+	.light .focus-ring {
+		@apply focus:ring-offset-slate-50;
+	}
+}
