@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Solarpunk Compendium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* * ==============================================
+         * THEME & STYLE CONFIGURATION
+         * ==============================================
+         * This section uses CSS variables to define two distinct themes: light and dark.
+         * A theme switcher in the JavaScript logic will toggle a class on the <html> element
+         * to activate the desired theme. The default is a system-aware theme.
+        */
+
+        :root {
+            /* --- Light Theme (Default) --- */
+            --bg-image: url('https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3');
+            --bg-body: #f0f2f5;
+            --text-primary: #1f2937; /* Gray 800 */
+            --text-secondary: #4b5563; /* Gray 600 */
+            --text-accent: #008a71; /* Darker Teal for contrast */
+            --text-accent-glow: #008a71;
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-backdrop-blur: blur(20px);
+            --card-border-color: rgba(255, 255, 255, 0.75);
+            --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            --nav-link-active-color: #005a4a;
+            --nav-link-active-shadow: 0 0 8px #008a71;
+            --scrollbar-track-bg: rgba(0, 0, 0, 0.1);
+            --scrollbar-thumb-bg: rgba(1, 212, 169, 0.6);
+            --scrollbar-thumb-hover-bg: rgba(1, 212, 169, 0.9);
+            --table-header-bg: rgba(0, 0, 0, 0.05);
+        }
+
+        html.dark {
+            /* --- Dark Theme --- */
+            --bg-image: url('https://images.unsplash.com/photo-1622547748225-3fc46420c110?q=80&w=2832&auto=format&fit=crop');
+            --bg-body: #0a0a14;
+            --text-primary: #e5e7eb; /* Gray 200 */
+            --text-secondary: #9ca3af; /* Gray 400 */
+            --text-accent: #01D4A9;
+            --text-accent-glow: #01D4A9;
+            --card-bg: rgba(20, 20, 35, 0.7);
+            --card-backdrop-blur: blur(25px) saturate(180%);
+            --card-border-color: rgba(255, 255, 255, 0.1);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --nav-link-active-color: #01D4A9;
+            --nav-link-active-shadow: 0 0 10px #01D4A9;
+            --scrollbar-track-bg: rgba(20, 20, 30, 0.5);
+            --scrollbar-thumb-bg: rgba(1, 212, 169, 0.6);
+            --scrollbar-thumb-hover-bg: rgba(1, 212, 169, 0.8);
+            --table-header-bg: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Auto-theming for users with OS preference set */
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light) {
+                /* Apply dark theme variables when OS is dark and no specific theme is forced */
+                --bg-image: url('https://images.unsplash.com/photo-1622547748225-3fc46420c110?q=80&w=2832&auto=format&fit=crop');
+                --bg-body: #0a0a14;
+                --text-primary: #e5e7eb;
+                --text-secondary: #9ca3af;
+                --text-accent: #01D4A9;
+                --text-accent-glow: #01D4A9;
+                --card-bg: rgba(20, 20, 35, 0.7);
+                --card-backdrop-blur: blur(25px) saturate(180%);
+                --card-border-color: rgba(255, 255, 255, 0.1);
+                --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+                --nav-link-active-color: #01D4A9;
+                --nav-link-active-shadow: 0 0 10px #01D4A9;
+                --scrollbar-track-bg: rgba(20, 20, 30, 0.5);
+                --scrollbar-thumb-bg: rgba(1, 212, 169, 0.6);
+                --scrollbar-thumb-hover-bg: rgba(1, 212, 169, 0.8);
+                --table-header-bg: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* --- Base Styles --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: var(--bg-image);
+            background-color: var(--bg-body);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            transition: background-color 0.5s ease;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* --- Enhanced Glassmorphism Card --- */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--card-backdrop-blur);
+            -webkit-backdrop-filter: var(--card-backdrop-blur);
+            border: 1px solid var(--card-border-color);
+            box-shadow: var(--card-shadow);
+            border-radius: 1rem;
+            transition: background 0.5s ease, border 0.5s ease, box-shadow 0.5s ease;
+        }
+        
+        /* --- Typography & Links --- */
+        .text-accent {
+            color: var(--text-accent);
+            text-shadow: 0 0 5px var(--text-accent-glow);
+        }
+        .nav-link.active {
+            color: var(--nav-link-active-color);
+            text-shadow: var(--nav-link-active-shadow);
+        }
+        .citation-link, .prose a {
+            color: var(--text-accent);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+        }
+        .citation-link:hover, .prose a:hover {
+            text-shadow: 0 0 8px var(--text-accent-glow);
+            text-decoration: underline;
+        }
+        #references-list li a {
+            color: var(--text-accent);
+            text-decoration: none;
+        }
+        #references-list li a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-track-bg); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb-bg);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover-bg); }
+
+        /* --- Content & Table Styles --- */
+        #references-list {
+            list-style-position: outside;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+        #references-list li {
+            margin-bottom: 0.75rem;
+            scroll-margin-top: 7rem; /* Adjust for sticky header */
+        }
+        .prose {
+             color: var(--text-secondary);
+        }
+        .prose table {
+            width: 100%;
+            margin-top: 1.5em;
+            margin-bottom: 1.5em;
+            border-collapse: collapse;
+        }
+        .prose th, .prose td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--card-border-color);
+            vertical-align: top;
+        }
+        .prose thead th {
+            font-weight: 700;
+            color: var(--text-primary);
+            background-color: var(--table-header-bg);
+            border-bottom-width: 2px;
+            border-bottom-color: var(--card-border-color);
+        }
+        .prose tbody tr:last-child td {
+            border-bottom: 0;
+        }
+    </style>
+</head>
+<body class="leading-relaxed">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="glass-card sticky top-4 inset-x-4 z-50 max-w-7xl mx-auto">
+        <nav class="flex items-center justify-between p-4">
+            <a href="#home" class="nav-link font-orbitron text-xl md:text-2xl font-bold tracking-wider text-[var(--text-primary)]">
+                Solarpunk<span class="text-accent">.</span>
+            </a>
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-medium text-[var(--text-secondary)]">
+                <a href="#summary" class="nav-link px-3 py-2 rounded-md hover:bg-white/10 transition-colors" data-lang-key="nav_summary">Summary</a>
+                <a href="#part1" class="nav-link px-3 py-2 rounded-md hover:bg-white/10 transition-colors" data-lang-key="nav_philosophy">Philosophy</a>
+                <a href="#part2" class="nav-link px-3 py-2 rounded-md hover:bg-white/10 transition-colors" data-lang-key="nav_culture">Culture</a>
+                <a href="#part3" class="nav-link px-3 py-2 rounded-md hover:bg-white/10 transition-colors" data-lang-key="nav_ecosystem">Ecosystem</a>
+                <a href="#part4" class="nav-link px-3 py-2 rounded-md hover:bg-white/10 transition-colors" data-lang-key="nav_applications">Applications</a>
+                <a href="#part5" class="nav-link px-3 py-2 rounded-md hover:bg-white/10 transition-colors" data-lang-key="nav_library">Library</a>
+                <a href="#part6" class="nav-link px-3 py-2 rounded-md hover:bg-white/10 transition-colors" data-lang-key="nav_lexicon">Lexicon</a>
+                <a href="#references" class="nav-link px-3 py-2 rounded-md hover:bg-white/10 transition-colors" data-lang-key="nav_references">References</a>
+                <button id="lang-toggle" class="ml-2 px-3 py-2 rounded-md bg-black/10 hover:bg-black/20 font-bold text-[var(--text-primary)] transition-colors">ES</button>
+                <button id="theme-toggle" title="Cycle Theme" class="ml-2 w-10 h-10 flex items-center justify-center rounded-md bg-black/10 hover:bg-black/20 text-[var(--text-primary)] transition-colors">
+                    <!-- Theme icon will be injected here by JS -->
+                </button>
+            </div>
+            <!-- Mobile Navigation Button -->
+            <div class="md:hidden flex items-center">
+                <button id="lang-toggle-mobile" class="mr-2 px-3 py-2 rounded-md bg-black/10 hover:bg-black/20 font-bold text-[var(--text-primary)] transition-colors">ES</button>
+                <button id="theme-toggle-mobile" title="Cycle Theme" class="mr-2 w-10 h-10 flex items-center justify-center rounded-md bg-black/10 hover:bg-black/20 text-[var(--text-primary)] transition-colors">
+                    <!-- Theme icon will be injected here by JS -->
+                </button>
+                <button id="mobile-menu-button" class="text-[var(--text-primary)] focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden p-4 border-t border-[var(--card-border-color)] text-[var(--text-secondary)]">
+            <a href="#home" class="nav-link block py-2 text-center hover:bg-black/10 rounded-md">Home</a>
+            <a href="#summary" class="nav-link block py-2 text-center hover:bg-black/10 rounded-md" data-lang-key="nav_summary_mobile">Summary</a>
+            <a href="#part1" class="nav-link block py-2 text-center hover:bg-black/10 rounded-md" data-lang-key="nav_philosophy_mobile">Philosophy</a>
+            <a href="#part2" class="nav-link block py-2 text-center hover:bg-black/10 rounded-md" data-lang-key="nav_culture_mobile">Culture</a>
+            <a href="#part3" class="nav-link block py-2 text-center hover:bg-black/10 rounded-md" data-lang-key="nav_ecosystem_mobile">Ecosystem</a>
+            <a href="#part4" class="nav-link block py-2 text-center hover:bg-black/10 rounded-md" data-lang-key="nav_applications_mobile">Applications</a>
+            <a href="#part5" class="nav-link block py-2 text-center hover:bg-black/10 rounded-md" data-lang-key="nav_library_mobile">Library</a>
+            <a href="#part6" class="nav-link block py-2 text-center hover:bg-black/10 rounded-md" data-lang-key="nav_lexicon_mobile">Lexicon</a>
+            <a href="#references" class="nav-link block py-2 text-center hover:bg-black/10 rounded-md" data-lang-key="nav_references_mobile">References</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 md:py-16">
+        <section id="home" class="min-h-[60vh] flex flex-col items-center justify-center text-center py-20 scroll-mt-28">
+            <div class="glass-card p-8 md:p-12">
+                <h1 class="font-orbitron text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-4 leading-tight" data-lang-key="hero_title">
+                    The Solarpunk Compendium
+                </h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-[var(--text-secondary)]" data-lang-key="hero_subtitle">
+                    A Deep Dive into the Paradigm of a Sustainable Future
+                </p>
+            </div>
+        </section>
+        <div id="content-container" class="space-y-12"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center p-8 text-[var(--text-secondary)] text-sm">
+        <p data-lang-key="footer_curated">The Solarpunk Compendium | Curated for Innovaciones MADFAM</p>
+        <p data-lang-key="footer_rights">&copy; 2025. All rights reserved.</p>
+    </footer>
+    
+    <!-- Scroll to Top Button -->
+    <button id="to-top-button" title="Go To Top" class="hidden fixed z-50 bottom-8 right-8 border-0 w-12 h-12 rounded-full drop-shadow-md bg-[var(--text-accent)]/50 text-white text-3xl font-bold flex justify-center items-center transition-all duration-300 hover:bg-[var(--text-accent)]">
+        &uarr;
+    </button>
+
+    <script>
+        // --- DATA OBJECTS (Content & Language) ---
+        const langData = { en: { nav_summary: "Summary", nav_philosophy: "Philosophy", nav_culture: "Culture", nav_ecosystem: "Ecosystem", nav_applications: "Applications", nav_library: "Library", nav_lexicon: "Lexicon", nav_references: "References", nav_summary_mobile: "Summary", nav_philosophy_mobile: "Philosophy", nav_culture_mobile: "Culture", nav_ecosystem_mobile: "Ecosystem", nav_applications_mobile: "Applications", nav_library_mobile: "Library", nav_lexicon_mobile: "Lexicon", nav_references_mobile: "References", hero_title: "The Solarpunk Compendium", hero_subtitle: "A Deep Dive into the Paradigm of a Sustainable Future", footer_curated: "The Solarpunk Compendium | Curated for Innovaciones MADFAM", footer_rights: "&copy; 2025. All rights reserved.", }, es: { nav_summary: "Resumen", nav_philosophy: "Filosofía", nav_culture: "Cultura", nav_ecosystem: "Ecosistema", nav_applications: "Aplicaciones", nav_library: "Biblioteca", nav_lexicon: "Léxico", nav_references: "Referencias", nav_summary_mobile: "Resumen", nav_philosophy_mobile: "Filosofía", nav_culture_mobile: "Cultura", nav_ecosystem_mobile: "Ecosistema", nav_applications_mobile: "Aplicaciones", nav_library_mobile: "Biblioteca", nav_lexicon_mobile: "Léxico", nav_references_mobile: "Referencias", hero_title: "El Compendio Solarpunk", hero_subtitle: "Una Inmersión Profunda en el Paradigma de un Futuro Sostenible", footer_curated: "El Compendio Solarpunk | Curado para Innovaciones MADFAM", footer_rights: "&copy; 2025. Todos los derechos reservados.", } };
+        
+        const contentData = {
+            summary: {
+                en: {
+                    title: 'Executive Summary',
+                    content: `<p class="mb-4">Solarpunk is an emergent cultural, aesthetic, and activist movement dedicated to envisioning and realizing a future that is environmentally sustainable, technologically advanced, and socially just. It functions as a direct and optimistic response to the pervasive dystopianism and climate pessimism that characterize many contemporary visions of the future. At its core, solarpunk seeks to answer and embody the question: "what does a sustainable civilization look like, and how can we get there?". This is not a passive or purely utopian exercise; it is a proactive paradigm that merges speculative imagination with a practical, "do-it-yourself" (DIY) ethos.</p><p class="mb-4">The movement's philosophy is built on several key tenets: a radical optimism grounded in pragmatic solutions; a deep commitment to ecological harmony, symbolized by renewable energy sources like solar power; a foundational belief in community, social justice, and radical inclusivity; and a "punk" spirit of rebellion against the unsustainable and inequitable status quo of global capitalism. Its intellectual lineage is a potent synthesis of utopian literature, anarchist and libertarian socialist political theory, decolonial thought, and social ecology, which together form a robust framework for critiquing and moving beyond current systems of hierarchy and extraction.<a href="#ref-4" class="citation-link">[4]</a></p><p class="mb-4">Culturally, solarpunk is expressed through a distinct and appealing aesthetic that harmoniously integrates nature with technology. Visually inspired by Art Nouveau, the Arts and Crafts movement, and the films of Hayao Miyazaki, it depicts verdant, walkable cities, biophilic architecture, and a world powered by clean energy. This aesthetic is not merely decorative but serves as a strategic tool to make a positive future feel tangible and desirable. These visions are explored in a growing body of literature, sustainable fashion, and digital media, including online communities and video games that allow participants to actively build and manage sustainable worlds.</p><p>For an organization like Innovaciones MADFAM, the solarpunk paradigm offers more than just a new design language. It provides a holistic framework for innovation that is human-centric, community-oriented, and environmentally regenerative. It suggests that the most impactful innovations are not isolated products but are embedded within sustainable systems that consider governance, economic models, and social equity. Engaging with solarpunk means understanding that the *process* of innovation—how teams collaborate, how technology is developed, and how communities are engaged—is as critical as the final outcome. It is a call to "move quietly and plant things," building the foundations of a better world in the present.</p>`
+                },
+                es: {
+                    title: 'Resumen Ejecutivo',
+                    content: `<p class="mb-4">El solarpunk es un movimiento cultural, estético y activista emergente dedicado a imaginar y realizar un futuro que sea ambientalmente sostenible, tecnológicamente avanzado y socialmente justo. Funciona como una respuesta directa y optimista al distopismo y pesimismo climático generalizados que caracterizan muchas visiones contemporáneas del futuro. En su núcleo, el solarpunk busca responder y encarnar la pregunta: "¿cómo es una civilización sostenible y cómo podemos llegar allí?". Este no es un ejercicio pasivo o puramente utópico; es un paradigma proactivo que fusiona la imaginación especulativa con un ethos práctico de "hazlo tú mismo" (DIY).</p><p class="mb-4">La filosofía del movimiento se basa en varios principios clave: un optimismo radical fundamentado en soluciones pragmáticas; un profundo compromiso con la armonía ecológica, simbolizada por fuentes de energía renovable como la energía solar; una creencia fundamental en la comunidad, la justicia social y la inclusión radical; y un espíritu "punk" de rebelión contra el statu quo insostenible e inequitativo del capitalismo global. Su linaje intelectual es una potente síntesis de la literatura utópica, la teoría política anarquista y socialista libertaria, el pensamiento decolonial y la ecología social, que en conjunto forman un marco robusto para criticar y superar los sistemas actuales de jerarquía y extracción.<a href="#ref-4" class="citation-link">[4]</a></p><p class="mb-4">Culturalmente, el solarpunk se expresa a través de una estética distintiva y atractiva que integra armoniosamente la naturaleza con la tecnología. Visualmente inspirado en el Art Nouveau, el movimiento Arts and Crafts y las películas de Hayao Miyazaki, representa ciudades verdes y caminables, arquitectura biofílica y un mundo impulsado por energía limpia. Esta estética no es meramente decorativa, sino que sirve como una herramienta estratégica para hacer que un futuro positivo se sienta tangible y deseable. Estas visiones se exploran en un creciente cuerpo de literatura, moda sostenible y medios digitales, incluidas comunidades en línea y videojuegos que permiten a los participantes construir y gestionar activamente mundos sostenibles.</p><p>Para una organización como Innovaciones MADFAM, el paradigma solarpunk ofrece más que un nuevo lenguaje de diseño. Proporciona un marco holístico para la innovación que es centrado en el ser humano, orientado a la comunidad y ambientalmente regenerativo. Sugiere que las innovaciones más impactantes no son productos aislados, sino que están integradas en sistemas sostenibles que consideran la gobernanza, los modelos económicos y la equidad social. Involucrarse con el solarpunk significa comprender que el *proceso* de innovación —cómo colaboran los equipos, cómo se desarrolla la tecnología y cómo se involucran las comunidades— es tan crítico como el resultado final. Es un llamado a "moverse en silencio y plantar cosas", construyendo los cimientos de un mundo mejor en el presente.</p>`
+                }
+            },
+            part1: {
+                en: {
+                    title: 'Part I: Conceptual & Philosophical Foundations',
+                    content: `<p class="mb-6">This section establishes the intellectual bedrock of solarpunk. It moves beyond a surface-level description to deconstruct the "why" behind the movement, analyzing its core values, its philosophical ancestors, and the foundational digital texts that serve as its constitution.</p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent mb-4">1.1 The Core Tenets: Defining a Movement of Pragmatic Optimism</h3>
+                    <p class="mb-4">The movement's central purpose is to answer and embody the question, "what does a sustainable civilization look like, and how can we get there?".<a href="#ref-2" class="citation-link">[2]</a> This is not a naive utopianism but a pragmatic choice to focus on constructive pathways in an era of "climate doomerism".<a href="#ref-3" class="citation-link">[3]</a></p>
+                    <p class="mb-4">The "Solar" in solarpunk represents solar energy as a prime symbol for a renewable, post-fossil fuel future. More broadly, it signifies a fundamental reintegration of human society with the natural world.<a href="#ref-2" class="citation-link">[2]</a> This ecological focus is inseparable from a commitment to social justice. A solarpunk future is envisioned as "equally communal, sustainable and technologically advanced".<a href="#ref-2" class="citation-link">[2]</a> The "Punk" in the name signifies a rebellion against the mainstream's unsustainable and inequitable trajectory. This rebellion is not characterized by nihilistic destruction but by a constructive, "do-it-yourself" (DIY) ethos.<a href="#ref-1" class="citation-link">[1]</a></p>
+                    <p class="mb-4">Finally, solarpunk is not anti-technology but advocates for its thoughtful and appropriate application. It embraces a spectrum of solutions, from high-tech innovations like decentralized energy grids and biotechnology to low-tech, resilient ways of living such as gardening, permaculture, and craftsmanship.<a href="#ref-3" class="citation-link">[3]</a></p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">1.2 The Intellectual Lineage: Tracing the Roots of a Greener Future</h3>
+                    <p class="mb-4">Solarpunk did not emerge from a vacuum. It is a direct reaction to the literary heritage of dystopianism, particularly the nihilism of cyberpunk. It draws inspiration from the utopian tradition, especially the "ambiguous utopias" of authors like Ursula K. Le Guin and Marge Piercy.<a href="#ref-16" class="citation-link">[16]</a></p>
+                    <p class="mb-4">The political philosophy of solarpunk is deeply rooted in anti-capitalist and anti-authoritarian thought. Many foundational texts explicitly identify solarpunk as "inherently anarchist".<a href="#ref-21" class="citation-link">[21]</a> It draws on the work of thinkers like Peter Kropotkin (mutual aid) and Murray Bookchin (social ecology, post-scarcity anarchism).<a href="#ref-5" class="citation-link">[5]</a> A critical and evolving influence is decolonial thought, which recognizes that the climate crisis is inseparable from colonial histories of extraction, exploitation, and violence.<a href="#ref-25" class="citation-link">[25]</a></p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">1.3 Foundational Texts: The Manifestos and Digital Campfires</h3>
+                    <p class="mb-4">The term itself was first coined in an anonymous 2008 blog post on Republic of the Bees titled "From Steampunk to Solarpunk".<a href="#ref-3" class="citation-link">[3]</a> The movement gained significant momentum in 2014 with a Tumblr post by artist Miss Olivia Louise, who fused the idea with the aesthetic of Art Nouveau.<a href="#ref-3" class="citation-link">[3]</a> In the same year, Adam Flynn published "Solarpunk: Notes toward a manifesto" on ASU's Project Hieroglyph forum.<a href="#ref-3" class="citation-link">[3]</a></p>
+                    <p class="mb-4">Perhaps the most widely cited is "A Solarpunk Manifesto," published on re-des.org in 2019, which explicitly defines solarpunk as a movement, not just a genre.<a href="#ref-2" class="citation-link">[2]</a> Another key text from solarpunk.it defines the "Punk" as the practice of rebellion against the "predatory, deadly model of capitalist development".<a href="#ref-13" class="citation-link">[13]</a></p>`
+                },
+                es: {
+                    title: 'Parte I: Fundamentos Conceptuales y Filosóficos',
+                    content: `<p class="mb-6">Esta sección establece la base intelectual del solarpunk. Va más allá de una descripción superficial para deconstruir el "porqué" detrás del movimiento, analizando sus valores fundamentales, sus ancestros filosóficos y los textos digitales fundacionales que sirven como su constitución.</p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent mb-4">1.1 Los Principios Fundamentales: Definiendo un Movimiento de Optimismo Pragmático</h3>
+                    <p class="mb-4">El propósito central del movimiento es responder y encarnar la pregunta: "¿cómo es una civilización sostenible y cómo podemos llegar allí?".<a href="#ref-2" class="citation-link">[2]</a> No se trata de un utopismo ingenuo, sino de una elección pragmática para centrarse en vías constructivas en una era de "pesimismo climático".<a href="#ref-3" class="citation-link">[3]</a></p>
+                    <p class="mb-4">El "Solar" en solarpunk representa la energía solar como símbolo principal de un futuro renovable y post-combustibles fósiles. En un sentido más amplio, significa una reintegración fundamental de la sociedad humana con el mundo natural.<a href="#ref-2" class="citation-link">[2]</a> Este enfoque ecológico es inseparable de un compromiso con la justicia social. Un futuro solarpunk se concibe como "igualmente comunitario, sostenible y tecnológicamente avanzado".<a href="#ref-2" class="citation-link">[2]</a> El "Punk" en el nombre significa una rebelión contra la trayectoria insostenible e inequitativa de la corriente principal. Esta rebelión no se caracteriza por la destrucción nihilista, sino por un ethos constructivo de "hazlo tú mismo" (DIY).<a href="#ref-1" class="citation-link">[1]</a></p>
+                    <p class="mb-4">Finalmente, el solarpunk no es anti-tecnología, sino que aboga por su aplicación reflexiva y apropiada. Abarca un espectro de soluciones, desde innovaciones de alta tecnología como redes de energía descentralizadas y biotecnología, hasta formas de vida resilientes de baja tecnología como la jardinería, la permacultura y la artesanía.<a href="#ref-3" class="citation-link">[3]</a></p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">1.2 El Linaje Intelectual: Rastreando las Raíces de un Futuro más Verde</h3>
+                    <p class="mb-4">El solarpunk no surgió de la nada. Es una reacción directa a la herencia literaria del distopismo, particularmente el nihilismo del cyberpunk. Se inspira en la tradición utópica, especialmente en las "utopías ambiguas" de autoras como Ursula K. Le Guin y Marge Piercy.<a href="#ref-16" class="citation-link">[16]</a></p>
+                    <p class="mb-4">La filosofía política del solarpunk está profundamente arraigada en el pensamiento anticapitalista y antiautoritario. Muchos textos fundacionales identifican explícitamente el solarpunk como "inherentemente anarquista".<a href="#ref-21" class="citation-link">[21]</a> Se basa en el trabajo de pensadores como Piotr Kropotkin (apoyo mutuo) y Murray Bookchin (ecología social, anarquismo post-escasez).<a href="#ref-5" class="citation-link">[5]</a> Una influencia crítica y en evolución es el pensamiento decolonial, que reconoce que la crisis climática es inseparable de las historias coloniales de extracción, explotación y violencia.<a href="#ref-25" class="citation-link">[25]</a></p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">1.3 Textos Fundacionales: Los Manifiestos y Hogueras Digitales</h3>
+                    <p class="mb-4">El término en sí fue acuñado por primera vez en una publicación anónima de un blog en 2008 en Republic of the Bees titulada "From Steampunk to Solarpunk".<a href="#ref-3" class="citation-link">[3]</a> El movimiento ganó un impulso significativo en 2014 con una publicación en Tumblr de la artista Miss Olivia Louise, quien fusionó la idea con la estética del Art Nouveau.<a href="#ref-3" class="citation-link">[3]</a> En el mismo año, Adam Flynn publicó "Solarpunk: Notes toward a manifesto" en el foro Project Hieroglyph de la ASU.<a href="#ref-3" class="citation-link">[3]</a></p>
+                    <p class="mb-4">Quizás el más citado es "Un Manifiesto Solarpunk", publicado en re-des.org en 2019, que define explícitamente el solarpunk como un movimiento, no solo un género.<a href="#ref-2" class="citation-link">[2]</a> Otro texto clave de solarpunk.it define el "Punk" como la práctica de la rebelión contra el "modelo depredador y mortal del desarrollo capitalista".<a href="#ref-13" class="citation-link">[13]</a></p>`
+                }
+            },
+            part2: {
+                en: {
+                    title: 'Part II: Aesthetic & Cultural Manifestations',
+                    content: `<p class="mb-6">This part explores the tangible and sensory expressions of the solarpunk paradigm. It analyzes how the movement's core philosophies are translated into visual art, literature, fashion, and digital culture, creating a cohesive and recognizable, yet diverse, "imaginary."</p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent mb-4">2.1 Visualizing Tomorrow: Art, Design, and Architecture</h3>
+                    <p class="mb-4">The primary aesthetic is the harmonious integration of nature and technology, expressed through vibrant images of "greentech, walkable cities, sprawling plant life and an abundance of sunshine".<a href="#ref-35" class="citation-link">[35]</a> Key visual motifs include vertical forests, green roofs, and biophilic design.<a href="#ref-10" class="citation-link">[10]</a> Art Nouveau is a foundational stylistic influence for its use of organic lines and natural motifs.<a href="#ref-16" class="citation-link">[16]</a> The lush, technologically imaginative worlds of animator Hayao Miyazaki are also considered direct visual precursors.<a href="#ref-16" class="citation-link">[16]</a> Real-world projects like the Bosco Verticale in Milan<a href="#ref-37" class="citation-link">[37]</a> and Singapore's Gardens by the Bay<a href="#ref-35" class="citation-link">[35]</a> are frequently cited as manifestations of solarpunk urbanism.</p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">2.2 Narratives of Hope: The Literary Landscape</h3>
+                    <p class="mb-4">The short story anthology is a primary form for the genre. Seminal collections include the Brazilian anthology *Solarpunk: Histórias Ecológicas e Fantásticas em um Mundo Sustentável* (2012)<a href="#ref-18" class="citation-link">[18]</a> and *Sunvault: Stories of Solarpunk and Eco-Speculation* (2017).<a href="#ref-38" class="citation-link">[38]</a> Becky Chambers's *Monk and Robot* series is celebrated for its gentle, hopeful tone, and the inclusion of Afrofuturist authors like Nnedi Okorafor highlights the movement's commitment to centering non-Western voices.<a href="#ref-41" class="citation-link">[41]</a></p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">2.3 Material Culture: Sustainable Fashion and the DIY Ethos</h3>
+                    <p class="mb-4">Solarpunk fashion rejects fast fashion, prioritizing sustainability, craftsmanship, and functionality.<a href="#ref-10" class="citation-link">[10]</a> It emphasizes organic, recycled, and upcycled materials and promotes circular models like clothing rental and sharing.<a href="#ref-10" class="citation-link">[10]</a> The aesthetic often features light, loose-fitting garments with floral or animal motifs, celebrating cultural diversity.<a href="#ref-15" class="citation-link">[15]</a><a href="#ref-35" class="citation-link">[35]</a></p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">2.4 The Digital Commons: Online Communities and Gaming</h3>
+                    <p class="mb-4">Solarpunk is a digitally native movement. The subreddit r/solarpunk is one of the largest hubs for the global community.<a href="#ref-33" class="citation-link">[33]</a> There is strong interest in decentralized, federated social media platforms like Mastodon that align with the movement's anti-hierarchical ethos.<a href="#ref-47" class="citation-link">[47]</a> Solarpunk themes are increasingly present in video games like *Terra Nil* (ecosystem restoration), *Eco* (community-based survival), and the *Green Cities* expansion for *Cities: Skylines*.<a href="#ref-11" class="citation-link">[11]</a><a href="#ref-48" class="citation-link">[48]</a></p>`
+                },
+                es: {
+                    title: 'Parte II: Manifestaciones Estéticas y Culturales',
+                    content: `<p class="mb-6">Esta parte explora las expresiones tangibles y sensoriales del paradigma solarpunk. Analiza cómo las filosofías centrales del movimiento se traducen en arte visual, literatura, moda y cultura digital, creando un "imaginario" cohesivo y reconocible, aunque diverso.</p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent mb-4">2.1 Visualizando el Mañana: Arte, Diseño y Arquitectura</h3>
+                    <p class="mb-4">La estética principal es la integración armoniosa de la naturaleza y la tecnología, expresada a través de imágenes vibrantes de "tecnología verde, ciudades caminables, vida vegetal expansiva y abundancia de sol".<a href="#ref-35" class="citation-link">[35]</a> Los motivos visuales clave incluyen bosques verticales, techos verdes y diseño biofílico.<a href="#ref-10" class="citation-link">[10]</a> El Art Nouveau es una influencia estilística fundamental por su uso de líneas orgánicas y motivos naturales.<a href="#ref-16" class="citation-link">[16]</a> Los mundos exuberantes y tecnológicamente imaginativos del animador Hayao Miyazaki también se consideran precursores visuales directos.<a href="#ref-16" class="citation-link">[16]</a> Proyectos del mundo real como el Bosco Verticale en Milán<a href="#ref-37" class="citation-link">[37]</a> y los Jardines de la Bahía de Singapur<a href="#ref-35" class="citation-link">[35]</a> se citan con frecuencia como manifestaciones del urbanismo solarpunk.</p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">2.2 Narrativas de Esperanza: El Paisaje Literario</h3>
+                    <p class="mb-4">La antología de cuentos es una forma principal para el género. Las colecciones seminales incluyen la antología brasileña *Solarpunk: Histórias Ecológicas e Fantásticas em um Mundo Sustentável* (2012)<a href="#ref-18" class="citation-link">[18]</a> y *Sunvault: Stories of Solarpunk and Eco-Speculation* (2017).<a href="#ref-38" class="citation-link">[38]</a> La serie *Monje y Robot* de Becky Chambers es celebrada por su tono suave y esperanzador, y la inclusión de autores afrofuturistas como Nnedi Okorafor destaca el compromiso del movimiento de centrar voces no occidentales.<a href="#ref-41" class="citation-link">[41]</a></p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">2.3 Cultura Material: Moda Sostenible y el Ethos DIY</h3>
+                    <p class="mb-4">La moda solarpunk rechaza la moda rápida, priorizando la sostenibilidad, la artesanía y la funcionalidad.<a href="#ref-10" class="citation-link">[10]</a> Enfatiza los materiales orgánicos, reciclados y supra-reciclados y promueve modelos circulares como el alquiler y el intercambio de ropa.<a href="#ref-10" class="citation-link">[10]</a> La estética a menudo presenta prendas ligeras y holgadas con motivos florales o de animales, celebrando la diversidad cultural.<a href="#ref-15" class="citation-link">[15]</a><a href="#ref-35" class="citation-link">[35]</a></p>
+                    <h3 class="text-2xl font-bold font-orbitron text-accent my-6">2.4 Los Comunes Digitales: Comunidades en Línea y Videojuegos</h3>
+                    <p class="mb-4">El solarpunk es un movimiento nativo digital. El subreddit r/solarpunk es uno de los mayores centros para la comunidad global.<a href="#ref-33" class="citation-link">[33]</a> Existe un fuerte interés en plataformas de redes sociales descentralizadas y federadas como Mastodon, que se alinean con el ethos anti-jerárquico del movimiento.<a href="#ref-47" class="citation-link">[47]</a> Los temas solarpunk están cada vez más presentes en videojuegos como *Terra Nil* (restauración de ecosistemas), *Eco* (supervivencia basada en la comunidad) y la expansión *Green Cities* para *Cities: Skylines*.<a href="#ref-11" class="citation-link">[11]</a><a href="#ref-48" class="citation-link">[48]</a></p>`
+                }
+            },
+            part3: {
+                en: {
+                    title: 'Part III: The Solarpunk Ecosystem',
+                    content: `<p class="mb-6">This section provides a practical, navigable directory of the key individuals, groups, and platforms that constitute the solarpunk movement. This serves as a foundational resource for networking, research, and inspiration.</p>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mb-4">3.1 Pioneering Thinkers, Creators, and Academics</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Name/Entity</th><th>Type</th><th>Key Contribution/Description</th><th>Online Presence/Link</th></tr></thead><tbody>
+                    <tr><td>Anonymous</td><td>Blogger</td><td>Coined the term "solarpunk" in the 2008 blog post "From Steampunk to Solarpunk."</td><td><a href="https://republicofthebees.wordpress.com" target="_blank">republicofthebees.wordpress.com</a><a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    <tr><td>Miss Olivia Louise</td><td>Artist</td><td>Her 2014 Tumblr post of concept art was pivotal in defining the Art Nouveau-influenced visual aesthetic of solarpunk.</td><td>MissOlivia Louise (Tumblr)<a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    <tr><td>Adam Flynn</td><td>Strategist, Writer</td><td>Authored "Solarpunk: Notes toward a manifesto" (2014), a key text defining the genre's political and infrastructural resistance.</td><td><a href="https://hieroglyph.asu.edu" target="_blank">hieroglyph.asu.edu</a><a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    <tr><td>Sarena Ulibarri</td><td>Editor, Writer</td><td>Editor of genre-defining anthologies (Glass and Gardens, Multispecies Cities) via World Weaver Press.</td><td><a href="https://worldweaverpress.com" target="_blank">worldweaverpress.com</a><a href="#ref-9" class="citation-link">[9]</a></td></tr>
+                    <tr><td>Becky Chambers</td><td>Author</td><td>Author of the highly influential Monk and Robot series, celebrated for its gentle, hopeful depiction of a solarpunk world.</td><td>N/A</td></tr>
+                    <tr><td>Brenna Quinlan</td><td>Artist, Educator</td><td>Illustrator and permaculture teacher whose art strives to make the world a better place.</td><td><a href="https://brennaquinlan.com" target="_blank">brennaquinlan.com</a><a href="#ref-52" class="citation-link">[52]</a></td></tr>
+                    <tr><td>Andrewism</td><td>YouTuber</td><td>A popular YouTuber who creates videos and livestreams about solarpunk concepts.</td><td><a href="https://www.youtube.com/c/Andrewism" target="_blank">YouTube Channel</a><a href="#ref-54" class="citation-link">[54]</a></td></tr>
+                    </tbody></table></div>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">3.2 A Network of Action: Communities & Organizations</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Name/Entity</th><th>Type</th><th>Key Contribution/Description</th><th>Online Presence/Link</th></tr></thead><tbody>
+                    <tr><td>SOLARPUNKS</td><td>501(c)3 Non-Profit</td><td>Works to eliminate fossil fuels in creative industries and builds "creative community microgrids".</td><td><a href="https://www.solarpunks.club" target="_blank">solarpunks.club</a><a href="#ref-55" class="citation-link">[55]</a></td></tr>
+                    <tr><td>Cooperation Jackson</td><td>Cooperative Network</td><td>An emerging network of interconnected cooperatives in Jackson, MS, cited as a real-world example of solarpunk in action.</td><td><a href="https://cooperationjackson.org" target="_blank">cooperationjackson.org</a><a href="#ref-24" class="citation-link">[24]</a></td></tr>
+                    <tr><td>r/solarpunk</td><td>Online Community</td><td>The largest and most active online forum for solarpunk discussion, news, and art sharing, hosted on Reddit.</td><td><a href="https://www.reddit.com/r/solarpunk" target="_blank">reddit.com/r/solarpunk</a><a href="#ref-33" class="citation-link">[33]</a></td></tr>
+                    </tbody></table></div>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">3.3 Hubs of Knowledge: Essential Resource Platforms</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Name/Entity</th><th>Type</th><th>Key Contribution/Description</th><th>Online Presence/Link</th></tr></thead><tbody>
+                    <tr><td>Solarpunk Magazine</td><td>Publication, Podcast</td><td>A key magazine for solarpunk fiction, poetry, nonfiction, and art. Hosts the "Demand Utopia" podcast.</td><td><a href="https://solarpunkmagazine.com" target="_blank">solarpunkmagazine.com</a><a href="#ref-41" class="citation-link">[41]</a></td></tr>
+                    <tr><td>Solarpunk Station</td><td>Resource Website</td><td>A comprehensive website compiling links to books, podcasts, and websites related to solarpunk.</td><td><a href="https://solarpunkstation.com" target="_blank">solarpunkstation.com</a><a href="#ref-29" class="citation-link">[29]</a></td></tr>
+                    <tr><td>Appropedia</td><td>Wiki</td><td>A wiki for collaborative solutions in sustainability and poverty reduction, focusing on "appropriate technology."</td><td><a href="https://www.appropedia.org" target="_blank">appropedia.org</a><a href="#ref-29" class="citation-link">[29]</a></td></tr>
+                    </tbody></table></div>`
+                },
+                es: {
+                    title: 'Parte III: El Ecosistema Solarpunk',
+                    content: `<p class="mb-6">Esta sección proporciona un directorio práctico y navegable de los individuos, grupos y plataformas clave que constituyen el movimiento solarpunk. Sirve como un recurso fundamental para la creación de redes, la investigación y la inspiración.</p>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mb-4">3.1 Pensadores, Creadores y Académicos Pioneros</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Nombre/Entidad</th><th>Tipo</th><th>Contribución/Descripción Clave</th><th>Presencia/Enlace en Línea</th></tr></thead><tbody>
+                    <tr><td>Anónimo</td><td>Bloguero</td><td>Acuñó el término "solarpunk" en la publicación del blog de 2008 "De Steampunk a Solarpunk".</td><td><a href="https://republicofthebees.wordpress.com" target="_blank">republicofthebees.wordpress.com</a><a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    <tr><td>Miss Olivia Louise</td><td>Artista</td><td>Su publicación en Tumblr de 2014 con arte conceptual fue fundamental para definir la estética visual de influencia Art Nouveau del solarpunk.</td><td>MissOlivia Louise (Tumblr)<a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    <tr><td>Adam Flynn</td><td>Estratega, Escritor</td><td>Autor de "Solarpunk: Notas hacia un manifiesto" (2014), un texto clave que define la resistencia política e infraestructural del género.</td><td><a href="https://hieroglyph.asu.edu" target="_blank">hieroglyph.asu.edu</a><a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    <tr><td>Sarena Ulibarri</td><td>Editora, Escritora</td><td>Editora de antologías que definen el género (Glass and Gardens, Multispecies Cities) a través de World Weaver Press.</td><td><a href="https://worldweaverpress.com" target="_blank">worldweaverpress.com</a><a href="#ref-9" class="citation-link">[9]</a></td></tr>
+                    <tr><td>Becky Chambers</td><td>Autora</td><td>Autora de la muy influyente serie Monje y Robot, celebrada por su descripción amable y esperanzadora de un mundo solarpunk.</td><td>N/A</td></tr>
+                    <tr><td>Brenna Quinlan</td><td>Artista, Educadora</td><td>Ilustradora y profesora de permacultura cuyo arte se esfuerza por hacer del mundo un lugar mejor.</td><td><a href="https://brennaquinlan.com" target="_blank">brennaquinlan.com</a><a href="#ref-52" class="citation-link">[52]</a></td></tr>
+                    <tr><td>Andrewism</td><td>YouTuber</td><td>Un popular YouTuber que crea videos y transmisiones en vivo sobre conceptos de solarpunk.</td><td><a href="https://www.youtube.com/c/Andrewism" target="_blank">Canal de YouTube</a><a href="#ref-54" class="citation-link">[54]</a></td></tr>
+                    </tbody></table></div>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">3.2 Una Red de Acción: Comunidades y Organizaciones</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Nombre/Entidad</th><th>Tipo</th><th>Contribución/Descripción Clave</th><th>Presencia/Enlace en Línea</th></tr></thead><tbody>
+                    <tr><td>SOLARPUNKS</td><td>ONG 501(c)3</td><td>Trabaja para eliminar los combustibles fósiles en las industrias creativas y construye "micro-redes comunitarias creativas".</td><td><a href="https://www.solarpunks.club" target="_blank">solarpunks.club</a><a href="#ref-55" class="citation-link">[55]</a></td></tr>
+                    <tr><td>Cooperation Jackson</td><td>Red de Cooperativas</td><td>Una red emergente de cooperativas interconectadas en Jackson, MS, citada como un ejemplo del mundo real de solarpunk en acción.</td><td><a href="https://cooperationjackson.org" target="_blank">cooperationjackson.org</a><a href="#ref-24" class="citation-link">[24]</a></td></tr>
+                    <tr><td>r/solarpunk</td><td>Comunidad en Línea</td><td>El foro en línea más grande y activo para la discusión, noticias y arte de solarpunk, alojado en Reddit.</td><td><a href="https://www.reddit.com/r/solarpunk" target="_blank">reddit.com/r/solarpunk</a><a href="#ref-33" class="citation-link">[33]</a></td></tr>
+                    </tbody></table></div>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">3.3 Centros de Conocimiento: Plataformas de Recursos Esenciales</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Nombre/Entidad</th><th>Tipo</th><th>Contribución/Descripción Clave</th><th>Presencia/Enlace en Línea</th></tr></thead><tbody>
+                    <tr><td>Solarpunk Magazine</td><td>Publicación, Podcast</td><td>Una revista clave para la ficción, poesía, no ficción y arte solarpunk. Presenta el podcast "Demand Utopia".</td><td><a href="https://solarpunkmagazine.com" target="_blank">solarpunkmagazine.com</a><a href="#ref-41" class="citation-link">[41]</a></td></tr>
+                    <tr><td>Solarpunk Station</td><td>Sitio Web de Recursos</td><td>Un sitio web completo que recopila enlaces a libros, podcasts y sitios web relacionados con solarpunk.</td><td><a href="https://solarpunkstation.com" target="_blank">solarpunkstation.com</a><a href="#ref-29" class="citation-link">[29]</a></td></tr>
+                    <tr><td>Appropedia</td><td>Wiki</td><td>Una wiki para soluciones colaborativas en sostenibilidad y reducción de la pobreza, centrada en la "tecnología apropiada".</td><td><a href="https://www.appropedia.org" target="_blank">appropedia.org</a><a href="#ref-29" class="citation-link">[29]</a></td></tr>
+                    </tbody></table></div>`
+                }
+            },
+            part4: {
+                en: {
+                    title: 'Part IV: Solarpunk in Practice',
+                    content: `<p class="mb-6">This section bridges the gap between imagination and reality. It provides a categorized database of technologies, projects, and systems that either exist today or are speculatively proposed, all embodying the solarpunk ethos.</p>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mb-4">4.1 The Technology of Regeneration: Energy, Agriculture, & Circular Systems</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Project/Application</th><th>Sector</th><th>Description & Solarpunk Alignment</th><th>Source/Example</th></tr></thead><tbody>
+                    <tr><td>Floating Solar Farms</td><td>Energy</td><td>Solar panels on reservoirs, making efficient use of space and increasing performance.</td><td>Sembcorp Tengeh (Singapore)<a href="#ref-37" class="citation-link">[37]</a></td></tr>
+                    <tr><td>Permaculture / Agroecology</td><td>Food Systems</td><td>Agricultural systems designed to mimic natural ecosystems, promoting biodiversity and soil health.</td><td>Mentioned as key practical inspiration<a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    <tr><td>Vertical Farming</td><td>Food Systems</td><td>Growing crops in vertically stacked layers, often integrated into urban architecture.</td><td>Bosco Verticale (Milan)<a href="#ref-15" class="citation-link">[15]</a></td></tr>
+                    <tr><td>Fairphone</td><td>Tech / Circular Economy</td><td>A modular smartphone designed for longevity, repairability, and recyclability.</td><td>Fairphone company<a href="#ref-10" class="citation-link">[10]</a></td></tr>
+                    <tr><td>Open-Source Hardware/Software</td><td>Tech / Community</td><td>Technology with publicly accessible design so that anyone can study, modify, and distribute it.</td><td>Mentioned as a core principle<a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    </tbody></table></div>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">4.2 Building the Future: Solarpunk Architecture and Urbanism</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Project/Application</th><th>Sector</th><th>Description & Solarpunk Alignment</th><th>Source/Example</th></tr></thead><tbody>
+                    <tr><td>Bosco Verticale</td><td>Architecture</td><td>Residential towers in Milan covered in thousands of trees and shrubs.</td><td>Milan, Italy<a href="#ref-19" class="citation-link">[19]</a></td></tr>
+                    <tr><td>Vauban Eco-District</td><td>Urbanism</td><td>A neighborhood in Freiburg, Germany, with green spaces, low-impact transport, and solar homes.</td><td>Freiburg, Germany<a href="#ref-10" class="citation-link">[10]</a></td></tr>
+                    <tr><td>Earthships</td><td>Architecture / Housing</td><td>Off-grid, autonomous homes built from natural and recycled materials (e.g., tires).</td><td>Greater World Earthship Community<a href="#ref-37" class="citation-link">[37]</a></td></tr>
+                    <tr><td>Gardens by the Bay</td><td>Architecture / Urbanism</td><td>A nature park in Singapore featuring iconic "Supertree" structures that are vertical gardens.</td><td>Singapore<a href="#ref-35" class="citation-link">[35]</a></td></tr>
+                    </tbody></table></div>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">4.3 The Cooperative Commonwealth: Social and Economic Models</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Project/Application</th><th>Sector</th><th>Description & Solarpunk Alignment</th><th>Source/Example</th></tr></thead><tbody>
+                    <tr><td>Worker Cooperatives</td><td>Social/Economic</td><td>Businesses owned and self-managed by their workers, aligning with post-capitalist principles.</td><td>Cooperation Jackson (MS)<a href="#ref-24" class="citation-link">[24]</a></td></tr>
+                    <tr><td>Local Currencies</td><td>Social/Economic</td><td>Community-based currencies that encourage local trade and build community resilience.</td><td>BerkShares (MA), Ithaca HOURS (NY)<a href="#ref-63" class="citation-link">[63]</a></td></tr>
+                    <tr><td>Gift Economies / Time Banking</td><td>Social/Economic</td><td>Systems based on mutual aid and the exchange of services without money.</td><td>Time Banks (UK)<a href="#ref-63" class="citation-link">[63]</a></td></tr>
+                    <tr><td>Platform Cooperativism</td><td>Social/Economic / Tech</td><td>Online platforms (alternatives to Uber or Airbnb) that are collectively owned and governed by their users.</td><td>Sharetribe, Loomio<a href="#ref-29" class="citation-link">[29]</a></td></tr>
+                    </tbody></table></div>`
+                },
+                es: {
+                    title: 'Parte IV: Solarpunk en la Práctica',
+                    content: `<p class="mb-6">Esta sección cierra la brecha entre la imaginación y la realidad. Proporciona una base de datos categorizada de tecnologías, proyectos y sistemas que existen hoy o se proponen especulativamente, todos encarnando el ethos solarpunk.</p>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mb-4">4.1 La Tecnología de la Regeneración: Energía, Agricultura y Sistemas Circulares</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Proyecto/Aplicación</th><th>Sector</th><th>Descripción y Alineación Solarpunk</th><th>Fuente/Ejemplo</th></tr></thead><tbody>
+                    <tr><td>Granjas Solares Flotantes</td><td>Energía</td><td>Paneles solares en embalses, haciendo un uso eficiente del espacio y aumentando el rendimiento.</td><td>Sembcorp Tengeh (Singapur)<a href="#ref-37" class="citation-link">[37]</a></td></tr>
+                    <tr><td>Permacultura / Agroecología</td><td>Sistemas Alimentarios</td><td>Sistemas agrícolas diseñados para imitar los ecosistemas naturales, promoviendo la biodiversidad y la salud del suelo.</td><td>Mencionado como inspiración práctica clave<a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    <tr><td>Agricultura Vertical</td><td>Sistemas Alimentarios</td><td>Cultivo de cosechas en capas apiladas verticalmente, a menudo integradas en la arquitectura urbana.</td><td>Bosco Verticale (Milán)<a href="#ref-15" class="citation-link">[15]</a></td></tr>
+                    <tr><td>Fairphone</td><td>Tecnología / Economía Circular</td><td>Un teléfono inteligente modular diseñado para la longevidad, reparabilidad y reciclabilidad.</td><td>Empresa Fairphone<a href="#ref-10" class="citation-link">[10]</a></td></tr>
+                    <tr><td>Hardware/Software de Código Abierto</td><td>Tecnología / Comunidad</td><td>Tecnología con diseño de acceso público para que cualquiera pueda estudiarla, modificarla y distribuirla.</td><td>Mencionado como principio fundamental<a href="#ref-3" class="citation-link">[3]</a></td></tr>
+                    </tbody></table></div>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">4.2 Construyendo el Futuro: Arquitectura y Urbanismo Solarpunk</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Proyecto/Aplicación</th><th>Sector</th><th>Descripción y Alineación Solarpunk</th><th>Fuente/Ejemplo</th></tr></thead><tbody>
+                    <tr><td>Bosco Verticale</td><td>Arquitectura</td><td>Torres residenciales en Milán cubiertas por miles de árboles y arbustos.</td><td>Milán, Italia<a href="#ref-19" class="citation-link">[19]</a></td></tr>
+                    <tr><td>Eco-distrito de Vauban</td><td>Urbanismo</td><td>Un barrio en Friburgo, Alemania, con espacios verdes, transporte de bajo impacto y hogares solares.</td><td>Friburgo, Alemania<a href="#ref-10" class="citation-link">[10]</a></td></tr>
+                    <tr><td>Earthships</td><td>Arquitectura / Vivienda</td><td>Hogares autónomos y fuera de la red construidos con materiales naturales y reciclados (ej. neumáticos).</td><td>Comunidad Greater World Earthship<a href="#ref-37" class="citation-link">[37]</a></td></tr>
+                    <tr><td>Jardines de la Bahía</td><td>Arquitectura / Urbanismo</td><td>Un parque natural en Singapur con icónicas estructuras "Supertree" que son jardines verticales.</td><td>Singapur<a href="#ref-35" class="citation-link">[35]</a></td></tr>
+                    </tbody></table></div>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">4.3 La Mancomunidad Cooperativa: Modelos Sociales y Económicos</h3>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead><tr><th>Proyecto/Aplicación</th><th>Sector</th><th>Descripción y Alineación Solarpunk</th><th>Fuente/Ejemplo</th></tr></thead><tbody>
+                    <tr><td>Cooperativas de Trabajadores</td><td>Social/Económico</td><td>Empresas propiedad de y autogestionadas por sus trabajadores, alineadas con principios post-capitalistas.</td><td>Cooperation Jackson (MS)<a href="#ref-24" class="citation-link">[24]</a></td></tr>
+                    <tr><td>Monedas Locales</td><td>Social/Económico</td><td>Monedas basadas en la comunidad que fomentan el comercio local y construyen resiliencia comunitaria.</td><td>BerkShares (MA), Ithaca HOURS (NY)<a href="#ref-63" class="citation-link">[63]</a></td></tr>
+                    <tr><td>Economías del Don / Bancos de Tiempo</td><td>Social/Económico</td><td>Sistemas basados en la ayuda mutua y el intercambio de servicios sin dinero.</td><td>Bancos de Tiempo (RU)<a href="#ref-63" class="citation-link">[63]</a></td></tr>
+                    <tr><td>Cooperativismo de Plataforma</td><td>Social/Económico / Tec.</td><td>Plataformas en línea (alternativas a Uber o Airbnb) que son propiedad colectiva y gobernadas por sus usuarios.</td><td>Sharetribe, Loomio<a href="#ref-29" class="citation-link">[29]</a></td></tr>
+                    </tbody></table></div>`
+                }
+            },
+            part5: {
+                en: {
+                    title: 'Part V: The Solarpunk Media Library',
+                    content: `<p class="mb-6">This part provides direct, curated resources, forming the core of a foundational library for continued exploration of the solarpunk paradigm.</p>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mb-4">5.1 A Curated Bibliography of Essential Reading</h3>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Foundational Manifestos</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>"A Solarpunk Manifesto"</strong> by The Solarpunk Community (2019). The most widely cited manifesto, outlining core political and social tenets.<a href="#ref-2" class="citation-link">[2]</a></li>
+                        <li><strong>"Solarpunk: Notes toward a manifesto"</strong> by Adam Flynn (2014). Crucial in defining solarpunk's political dimension of resistance.<a href="#ref-3" class="citation-link">[3]</a></li>
+                    </ul>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Key Literary Works (Fiction)</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong><em>A Psalm for the Wild-Built</em></strong> by Becky Chambers. Considered quintessential solarpunk for its gentle, optimistic tone.</li>
+                        <li><strong><em>Sunvault: Stories of Solarpunk and Eco-Speculation</em></strong>. A cornerstone English-language anthology.<a href="#ref-38" class="citation-link">[38]</a></li>
+                        <li><strong><em>The Dispossessed: An Ambiguous Utopia</em></strong> by Ursula K. Le Guin. A foundational literary influence for its exploration of an anarchist society.</li>
+                    </ul>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">5.2 A Multimedia Collection</h3>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Visual Art Galleries & Exhibitions (Online)</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Solarpunks.club Art Page:</strong> A gallery of artists working in the solarpunk space.<a href="#ref-52" class="citation-link">[52]</a></li>
+                        <li><strong>MEAT UTOPIA - A Solarpunk Exhibition:</strong> A Berlin-based exhibition featuring digital artworks from pioneers like Rita Fei and Félix Riaño.<a href="#ref-65" class="citation-link">[65]</a></li>
+                    </ul>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Films & Documentaries (with Solarpunk Elements)</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Studio Ghibli Films: <em>Nausicaä of the Valley of the Wind, Laputa: Castle in the Sky</em>.</li>
+                        <li><em>Black Panther</em> (2018).<a href="#ref-8" class="citation-link">[8]</a></li>
+                        <li><em>WALL-E</em> (2008).<a href="#ref-68" class="citation-link">[68]</a></li>
+                    </ul>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Podcasts & Video Channels</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Demand Utopia: A Solarpunk Podcast</strong> (from Solarpunk Magazine).<a href="#ref-60" class="citation-link">[60]</a></li>
+                        <li><strong>Solarpunk Now!</strong> (Podcast).<a href="#ref-61" class="citation-link">[61]</a></li>
+                        <li><strong>Andrewism</strong> (YouTube Channel).<a href="#ref-54" class="citation-link">[54]</a></li>
+                    </ul>`
+                },
+                es: {
+                    title: 'Parte V: La Biblioteca Multimedia Solarpunk',
+                    content: `<p class="mb-6">Esta parte proporciona recursos directos y curados, formando el núcleo de una biblioteca fundamental para la exploración continua del paradigma solarpunk.</p>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mb-4">5.1 Una Bibliografía Curada de Lecturas Esenciales</h3>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Manifiestos Fundacionales</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>"Un Manifiesto Solarpunk"</strong> por La Comunidad Solarpunk (2019). El manifiesto más citado, que describe los principios políticos y sociales fundamentales.<a href="#ref-2" class="citation-link">[2]</a></li>
+                        <li><strong>"Solarpunk: Notas hacia un manifiesto"</strong> por Adam Flynn (2014). Crucial para definir la dimensión política de resistencia del solarpunk.<a href="#ref-3" class="citation-link">[3]</a></li>
+                    </ul>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Obras Literarias Clave (Ficción)</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong><em>Salmo por lo Construido en la Naturaleza</em></strong> por Becky Chambers. Considerada la quintaesencia del solarpunk por su tono amable y optimista.</li>
+                        <li><strong><em>Sunvault: Historias de Solarpunk y Eco-Especulación</em></strong>. Una antología fundamental en lengua inglesa.<a href="#ref-38" class="citation-link">[38]</a></li>
+                        <li><strong><em>Los Desposeídos: Una Utopía Ambigua</em></strong> por Ursula K. Le Guin. Una influencia literaria fundamental por su exploración de una sociedad anarquista.</li>
+                    </ul>
+                    <h3 class="text-xl font-bold font-orbitron text-accent mt-8 mb-4">5.2 Una Colección Multimedia</h3>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Galerías de Arte y Exposiciones Visuales (En línea)</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Página de Arte de Solarpunks.club:</strong> Una galería de artistas que trabajan en el espacio solarpunk.<a href="#ref-52" class="citation-link">[52]</a></li>
+                        <li><strong>MEAT UTOPIA - Una Exposición Solarpunk:</strong> Una exposición con sede en Berlín que presenta obras de arte digitales de pioneros como Rita Fei y Félix Riaño.<a href="#ref-65" class="citation-link">[65]</a></li>
+                    </ul>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Películas y Documentales (con Elementos Solarpunk)</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Películas de Studio Ghibli: <em>Nausicaä del Valle del Viento, El Castillo en el Cielo</em>.</li>
+                        <li><em>Black Panther</em> (2018).<a href="#ref-8" class="citation-link">[8]</a></li>
+                        <li><em>WALL-E</em> (2008).<a href="#ref-68" class="citation-link">[68]</a></li>
+                    </ul>
+                    <h4 class="font-bold mt-4 mb-2 text-[var(--text-primary)]">Podcasts y Canales de Video</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Demand Utopia: Un Podcast Solarpunk</strong> (de Solarpunk Magazine).<a href="#ref-60" class="citation-link">[60]</a></li>
+                        <li><strong>Solarpunk Now!</strong> (Podcast).<a href="#ref-61" class="citation-link">[61]</a></li>
+                        <li><strong>Andrewism</strong> (Canal de YouTube).<a href="#ref-54" class="citation-link">[54]</a></li>
+                    </ul>`
+                }
+            },
+            part6: {
+                en: {
+                    title: 'Part VI: A Lexicon of Solarpunk Terminology',
+                    content: `<p class="mb-6">This glossary provides definitions for key terms and concepts associated with the solarpunk movement, ensuring a shared vocabulary for nuanced understanding and discussion.</p>
+                    <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Arcology</h4><p>A concept of architectural design where a single, massive structure contains a self-sustaining habitat for a large population, minimizing environmental impact.<a href="#ref-8" class="citation-link">[8]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Biomimicry</h4><p>The design and production of materials, structures, and systems that are modeled on biological entities and processes.<a href="#ref-16" class="citation-link">[16]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Decentralization</h4><p>The process of redistributing or dispersing functions, powers, or things away from a central location or authority. A core political and technological goal.<a href="#ref-3" class="citation-link">[3]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Degrowth</h4><p>An economic theory that critiques the paradigm of infinite economic growth, advocating for a purposeful reduction of production and consumption.<a href="#ref-4" class="citation-link">[4]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Greenwashing</h4><p>The practice of making misleading claims about the environmental benefits of a product, service, or company. A key critique within the movement.<a href="#ref-23" class="citation-link">[23]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Jugaad</h4><p>A Hindi term referring to non-conventional, frugal innovation; a creative workaround or "hack." Adopted by solarpunk for its resourceful ethos.<a href="#ref-2" class="citation-link">[2]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Prefigurative Politics</h4><p>The practice of building and experiencing the desired future society in the here-and-now. Solarpunk is seen as prefigurative through its creation of co-ops and community gardens.<a href="#ref-3" class="citation-link">[3]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Social Ecology</h4><p>A theory founded by Murray Bookchin, which posits that ecological problems are rooted in deep-seated social problems, particularly in hierarchical systems.<a href="#ref-3" class="citation-link">[3]</a></p></div>
+                    </div>`
+                },
+                es: {
+                    title: 'Parte VI: Un Léxico de Terminología Solarpunk',
+                    content: `<p class="mb-6">Este glosario proporciona definiciones de términos y conceptos clave asociados con el movimiento solarpunk, asegurando un vocabulario compartido para una comprensión y discusión matizadas.</p>
+                    <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Arcología</h4><p>Un concepto de diseño arquitectónico donde una única estructura masiva contiene un hábitat autosostenible para una gran población, minimizando el impacto ambiental.<a href="#ref-8" class="citation-link">[8]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Biomimética</h4><p>El diseño y producción de materiales, estructuras y sistemas que se modelan a partir de entidades y procesos biológicos.<a href="#ref-16" class="citation-link">[16]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Descentralización</h4><p>El proceso de redistribuir o dispersar funciones, poderes o cosas lejos de una ubicación o autoridad central. Un objetivo político y tecnológico fundamental.<a href="#ref-3" class="citation-link">[3]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Decrecimiento</h4><p>Una teoría económica que critica el paradigma del crecimiento económico infinito, abogando por una reducción deliberada de la producción y el consumo.<a href="#ref-4" class="citation-link">[4]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Lavado de imagen verde (Greenwashing)</h4><p>La práctica de hacer afirmaciones engañosas sobre los beneficios ambientales de un producto, servicio o empresa. Una crítica clave dentro del movimiento.<a href="#ref-23" class="citation-link">[23]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Jugaad</h4><p>Un término hindi que se refiere a la innovación frugal y no convencional; una solución creativa o "hack". Adoptado por el solarpunk por su ethos ingenioso.<a href="#ref-2" class="citation-link">[2]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Política Prefigurativa</h4><p>La práctica de construir y experimentar la sociedad futura deseada en el aquí y ahora. El solarpunk se considera prefigurativo a través de la creación de cooperativas y huertos comunitarios.<a href="#ref-3" class="citation-link">[3]</a></p></div>
+                        <div><h4 class="font-bold text-lg text-[var(--text-primary)]">Ecología Social</h4><p>Una teoría fundada por Murray Bookchin, que postula que los problemas ecológicos tienen sus raíces en problemas sociales profundos, particularmente en sistemas jerárquicos.<a href="#ref-3" class="citation-link">[3]</a></p></div>
+                    </div>`
+                }
+            },
+            conclusion: {
+                en: {
+                    title: 'Conclusion',
+                    content: `<p class="mb-4">The solarpunk paradigm represents a significant and necessary evolution in how we imagine and build the future. It is far more than an aesthetic subculture; it is a coherent philosophical framework, a growing cultural movement, and a practical guide for regenerative action. By consciously rejecting dystopian despair and instead focusing on pragmatic, hopeful solutions, solarpunk provides a vital "memetic engine" for re-futuring our collective imagination.<a href="#ref-49" class="citation-link">[49]</a></p><p>Its synthesis of ecological wisdom, anarchist and socialist critiques of power, and decolonial ethics creates a holistic model for a society that is not only sustainable but also just, equitable, and radically inclusive. The movement's emphasis on prefigurative politics—building the future in the present through community projects, open-source collaboration, and cooperative enterprises—transforms it from a speculative genre into a tangible, lived practice.</p><p>For Innovaciones MADFAM, the implications are profound. Engaging with solarpunk offers a powerful lens through which to re-evaluate every stage of the innovation process. It challenges the organization to move beyond creating mere "green" products and instead focus on developing regenerative *systems*. By embracing this paradigm, Innovaciones MADFAM can position itself not just as a market leader, but as a genuine architect of a more vibrant, equitable, and sustainable world.</p>`
+                },
+                es: {
+                    title: 'Conclusión',
+                    content: `<p class="mb-4">El paradigma solarpunk representa una evolución significativa y necesaria en cómo imaginamos y construimos el futuro. Es mucho más que una subcultura estética; es un marco filosófico coherente, un movimiento cultural en crecimiento y una guía práctica para la acción regenerativa. Al rechazar conscientemente la desesperación distópica y centrarse en soluciones pragmáticas y esperanzadoras, el solarpunk proporciona un "motor memético" vital para re-imaginar nuestro futuro colectivo.<a href="#ref-49" class="citation-link">[49]</a></p><p>Su síntesis de sabiduría ecológica, críticas anarquistas y socialistas al poder, y ética decolonial crea un modelo holístico para una sociedad que no solo es sostenible, sino también justa, equitativa y radicalmente inclusiva. El énfasis del movimiento en la política prefigurativa —construir el futuro en el presente a través de proyectos comunitarios, colaboración de código abierto y empresas cooperativas— lo transforma de un género especulativo en una práctica tangible y vivida.</p><p>Para Innovaciones MADFAM, las implicaciones son profundas. Involucrarse con el solarpunk ofrece una lente poderosa a través de la cual reevaluar cada etapa del proceso de innovación. Desafía a la organización a ir más allá de la creación de meros productos "verdes" y, en su lugar, centrarse en el desarrollo de *sistemas* regenerativos. Al adoptar este paradigma, Innovaciones MADFAM puede posicionarse no solo como un líder del mercado, sino como un verdadero arquitecto de un mundo más vibrante, equitativo y sostenible.</p>`
+                }
+            },
+            references: {
+                en: {
+                    title: 'Works Cited',
+                    content: `<ol id="references-list"></ol>`
+                },
+                es: {
+                    title: 'Obras Citadas',
+                    content: `<ol id="references-list"></ol>`
+                }
+            }
+        };
+
+        const referencesData = [
+            { id: 1, text: 'SOLARPUNK: A REFERENCE GUIDE. Medium, accessed July 16, 2025. <a href="https://medium.com/solarpunks/solarpunk-a-reference-guide-8bcf18871965" target="_blank">Link</a>' },
+            { id: 2, text: 'A Solarpunk Manifesto (English) - ReDes - Regenerative Design, accessed July 16, 2025. <a href="https://www.re-des.org/es/a-solarpunk-manifesto/" target="_blank">Link</a>' },
+            { id: 3, text: 'Solarpunk - Wikipedia, accessed July 16, 2025. <a href="https://en.wikipedia.org/wiki/Solarpunk" target="_blank">Link</a>' },
+            { id: 4, text: 'A Solarpunk Manifesto: Turning Imaginary into Reality - MDPI, accessed July 16, 2025. <a href="https://www.mdpi.com/2409-9287/8/4/73" target="_blank">Link</a>' },
+            { id: 5, text: 'Solarpunk\'s World of Eco-Communism - Mike Duran, accessed July 16, 2025. <a href="https://www.mikeduran.com/2019/02/15/solarpunks-world-of-eco-communism/" target="_blank">Link</a>' },
+            { id: 6, text: 'Solarpunk | News | Sustainability - Teachers College - Columbia University, accessed July 16, 2025. <a href="https://www.tc.columbia.edu/sustainability/news/stories/solarpunk/" target="_blank">Link</a>' },
+            { id: 7, text: 'What Is Solarpunk? History, Themes, Criticism & Real-World..., accessed July 16, 2025. <a href="https://builtin.com/articles/solarpunk" target="_blank">Link</a>' },
+            { id: 8, text: 'An introduction to solarpunk on screen | ACMI, accessed July 16, 2025. <a href="https://www.acmi.net.au/stories-and-ideas/an-introduction-to-solarpunk-on-screen-acmi/" target="_blank">Link</a>' },
+            { id: 9, text: 'Solarpunk: An Introduction - Feminist Book Club, accessed July 16, 2025. <a href="https://www.feministbookclub.com/solarpunk-an-introduction/" target="_blank">Link</a>' },
+            { id: 10, text: 'Embracing Solarpunk in Design - Number Analytics, accessed July 16, 2025. <a href="https://www.numberanalytics.com/blog/solarpunk-design-guide" target="_blank">Link</a>' },
+            { id: 11, text: 'The Best Solarpunk Games - Game Rant, accessed July 16, 2025. <a href="https://gamerant.com/best-solarpunk-games/" target="_blank">Link</a>' },
+            { id: 12, text: 'Opinions on solarpunk and its ideals: r/Social Democracy - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/SocialDemocracy/comments/1c9t8n6/opinions_on_solarpunk_and_its_ideals/" target="_blank">Link</a>' },
+            { id: 13, text: 'What is SOLARPUNK a manifesto, accessed July 16, 2025. <a href="https://solarpunk.it/what-is-solarpunk-a-manifesto/" target="_blank">Link</a>' },
+            { id: 14, text: 'Core Themes of Solarpunk, accessed July 16, 2025. <a href="https://builtin.com/articles/solarpunk#:~:text=Core%20Themes%20of%20Solarpunk,communal%2C%20sustainable%20and%20technologically%20advanced" target="_blank">Link</a>' },
+            { id: 15, text: 'World Building Guide for Writing Solarpunk - Stories From Tomorrow, accessed July 16, 2025. <a href="https://storiesfromtomorrow.com/2025/04/07/world-building-guide-for-writing-solarpunk/" target="_blank">Link</a>' },
+            { id: 16, text: 'On Solarpunk - Sci Phi Journal, accessed July 16, 2025. <a href="https://www.sciphijournal.org/index.php/2021/09/30/on-solarpunk/" target="_blank">Link</a>' },
+            { id: 17, text: 'Solarpunk Imagines a Future Where Renewable Tech Meets Socio-Ecological Enlightenment - Earth Island Institute, accessed July 16, 2025. <a href="https://www.earthisland.org/journal/index.php/magazine/entry/solarpunk-imagines-future-renewable-tech-socio-ecological-enlightenment/" target="_blank">Link</a>' },
+            { id: 18, text: 'Solarpunk: Ecological and Fantastical Stories in a Sustainable World, Fábio Fernandes - Dragonfly, accessed July 16, 2025. <a href="https://dragonfly.eco/solarpunk-ecological-and-fantastical-stories-in-a-sustainable-world/" target="_blank">Link</a>' },
+            { id: 19, text: '"Solarpunk" & the Pedagogical Value of Utopia, Journal of Sustainability Education, accessed July 16, 2025. <a href="http://www.susted.com/wordpress/content/solarpunk-the-pedagogical-value-of-utopia_2020_05/" target="_blank">Link</a>' },
+            { id: 20, text: 'Social Anarchist Futures, accessed July 16, 2025. <a href="https://solarpunkanarchists.com/2018/05/02/social-anarchist-futures/" target="_blank">Link</a>' },
+            { id: 21, text: 'The theory of Anarchism: r/solarpunk - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/rozg1i/the_theory_of_anarchism/" target="_blank">Link</a>' },
+            { id: 22, text: 'Why Socialist \'Solarpunk\' Provides a Poor Vision of the Future, AEI, accessed July 16, 2025. <a href="https://www.aei.org/articles/why-socialist-solarpunk-provides-a-poor-vision-of-the-future/" target="_blank">Link</a>' },
+            { id: 23, text: 'Solarpunk Is Not About Pretty Aesthetics. It\'s About the End of... - VICE, accessed July 16, 2025. <a href="https://www.vice.com/en/article/wx5aym/solarpunk-is-not-about-pretty-aesthetics-its-about-the-end-of-capitalism" target="_blank">Link</a>' },
+            { id: 24, text: 'Cooperatives and Solarpunk - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/10pbepf/cooperatives_and_solarpunk/" target="_blank">Link</a>' },
+            { id: 25, text: '(PDF) Art, Energy and Technology: the Solarpunk Movement, accessed July 16, 2025. <a href="https://www.researchgate.net/publication/350104461_Art_Energy_and_Technology_the_Solarpunk_Movement" target="_blank">Link</a>' },
+            { id: 26, text: 'If Solarpunk is just socialism, why do we need Solarpunk? - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/se12hm/if_solarpunk_is_just_socialism_why_do_we_need/" target="_blank">Link</a>' },
+            { id: 27, text: 'Solarpunk - The Butterflies and Aliens Library, accessed July 16, 2025. <a href="https://www.butterfliesandaliens.com/stacks/solarpunk" target="_blank">Link</a>' },
+            { id: 28, text: 'Do you believe in climate solutions? You just might be a solarpunk. | Fix - Grist.org, accessed July 16, 2025. <a href="https://grist.org/fix/climate-fiction/do-you-believe-in-climate-solutions-you-just-might-be-a-solarpunk/" target="_blank">Link</a>' },
+            { id: 29, text: 'Solarpunk Resources | Solarpunk Station, accessed July 16, 2025. <a href="https://solarpunkstation.com/resources/" target="_blank">Link</a>' },
+            { id: 30, text: 'What exactly is the solarpunk aesthetic? - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/f64044/what_exactly_is_the_solarpunk_aesthetic/" target="_blank">Link</a>' },
+            { id: 31, text: 'A List of Solarpunk Links and Fiction, accessed July 16, 2025. <a href="https://www.reddit.com/r/Solarpunk/comments/92cyv1/a_list_of_solarpunk_links_and_fiction/" target="_blank">Link</a>' },
+            { id: 32, text: 'Solarpunk Futures | Auraria Library, accessed July 16, 2025. <a href="https://library.auraria.edu/staff-picks/solarpunk-futures" target="_blank">Link</a>' },
+            { id: 33, text: 'What You Can Learn From the Solarpunk Movement | Peril & Promise - PBS, accessed July 16, 2025. <a href="https://www.pbs.org/wnet/peril-and-promise/2018/11/what-you-can-learn-from-the-solarpunk-movement/" target="_blank">Link</a>' },
+            { id: 34, text: 'Solarpunk and Sustainability: Imagining the Future through Science Fiction - ResearchGate, accessed July 16, 2025. <a href="https://www.researchgate.net/publication/377636060_Solarpunk_and_Sustainability_Imagining_the_Future_through_Science_Fiction" target="_blank">Link</a>' },
+            { id: 35, text: 'The Definitive Guide To SOLARPUNK: Fashion, Movies, Aesthetic..., accessed July 16, 2025. <a href="https://imposemagazine.com/bytes/cinema/the-definitive-guide-to-solarpunk-fashion-movies-aesthetic-more" target="_blank">Link</a>' },
+            { id: 36, text: 'Solarpunk and designers? What is the aesthetics of Solarpunk? | by Karolina Tracz | Medium, accessed July 16, 2025. <a href="https://medium.com/@traczkarolina1212/solarpunk-and-designers-what-is-the-aesthetics-of-solarpunk-d0d0e84ee41f" target="_blank">Link</a>' },
+            { id: 37, text: 'Five Real Life Examples of Solarpunk? - Stories From Tomorrow, accessed July 16, 2025. <a href="https://storiesfromtomorrow.com/2025/04/23/five-real-life-examples-of-solarpunk/" target="_blank">Link</a>' },
+            { id: 38, text: 'Exploring Solarpunk: The Best Books to Inspire a Sustainable Future, accessed July 16, 2025. <a href="https://futurespore.medium.com/exploring-solarpunk-the-best-books-to-inspire-a-sustainable-future-ec090839106d" target="_blank">Link</a>' },
+            { id: 39, text: 'How Do You Like It So Far?: Sarena Ulibarri and Ed Finn on..., accessed July 16, 2025. <a href="http://henryjenkins.org/blog/2021/5/9/how-do-you-like-it-so-far-sarena-ulbari-and-ed-finn-on-solarpunk-part-one" target="_blank">Link</a>' },
+            { id: 40, text: 'Solar Punk a staff-created list from Daniel Boone Regional Library, accessed July 16, 2025. <a href="https://dbrl.bibliocommons.com/v2/list/display/2373311249/2603440529" target="_blank">Link</a>' },
+            { id: 41, text: 'Literary Spotlight: Solarpunk Magazine - The Writer, accessed July 16, 2025. <a href="https://www.writermag.com/get-published/literary-journal-spotlight/literary-spotlight-solarpunk-magazine/" target="_blank">Link</a>' },
+            { id: 42, text: 'Solarpunk Magazine Issue #10, accessed July 16, 2025. <a href="https://solarpunkmagazine.com/issue-10-available-and-on-sale/" target="_blank">Link</a>' },
+            { id: 43, text: 'Solarpunk Fashion Influence, accessed July 16, 2025. <a href="https://www.numberanalytics.com/blog/solarpunk-design-guide#:~:text=Solarpunk%20is%20influencing%20the%20fashion,rental%2C%20sharing%2C%20and%20recycling" target="_blank">Link</a>' },
+            { id: 44, text: 'What Is Solarpunk Art\'s Influence On Fashion? - Inside Museum Walls - YouTube, accessed July 16, 2025. <a href="https://www.youtube.com/watch?v=vzp6x9g7mk" target="_blank">Link</a>' },
+            { id: 45, text: 'Where is the action?: r/solarpunk - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/1g2fw6t/where_is_the_action/" target="_blank">Link</a>' },
+            { id: 46, text: 'What would a Solarpunk social media platform look like? - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/1i59byt/what_would_a_solarpunk_social_media_platform_look/" target="_blank">Link</a>' },
+            { id: 47, text: 'Best #clockpunk Hashtags for Instagram & TikTok - Top Trends 2025, accessed July 16, 2025. <a href="https://best-hashtags.com/hashtag/clockpunk/" target="_blank">Link</a>' },
+            { id: 48, text: 'solarpunk video games list - Google Search, accessed July 16, 2025. <a href="https://www.google.com/search?q=solarpunk+video+games+list" target="_blank">Link</a>' },
+            { id: 49, text: 'Solarpunk - thejaymo - Jay Springett, accessed July 16, 2025. <a href="https://thejaymo.net/solarpunk/" target="_blank">Link</a>' },
+            { id: 50, text: 'Academic sources on solarpunk - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/12lxxa2/academic_sources_on_solarpunk/" target="_blank">Link</a>' },
+            { id: 51, text: 'Solarpunk as Anarchist Infrapolitics - Solarpunk Anarchist, accessed July 16, 2025. <a href="https://solarpunkanarchists.com/2018/05/15/solarpunk-as-anarchist-infrapolitics/" target="_blank">Link</a>' },
+            { id: 52, text: 'solarpunks art featured at ecothèque, accessed July 16, 2025. <a href="https://www.solarpunks.club/art" target="_blank">Link</a>' },
+            { id: 53, text: 'The emerging genre of solarpunk has readers and writers alike..., accessed July 16, 2025. <a href="https://www.theplanetmagazine.net/spring-24-choice/solarpunk" target="_blank">Link</a>' },
+            { id: 54, text: 'Are there any popular solar punk youtubers or other content creators, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/vljrb2/are_there_any_popular_solar_punk_youtubers_or/" target="_blank">Link</a>' },
+            { id: 55, text: 'SOLARPUNKS, accessed July 16, 2025. <a href="https://www.solarpunks.club/" target="_blank">Link</a>' },
+            { id: 56, text: 'Colorado Solarpunks, accessed July 16, 2025. <a href="https://coloradosolarpunks.org/" target="_blank">Link</a>' },
+            { id: 57, text: 'Solarpunk Farm - Foundation for Intentional Community, accessed July 16, 2025. <a href="https://www.ic.org/directory/solarpunk-farm/" target="_blank">Link</a>' },
+            { id: 58, text: '5 Solarpunk Communities That Will Bring You Hope - YouTube, accessed July 16, 2025. <a href="https://www.youtube.com/watch?v=bg9VgYx228" target="_blank">Link</a>' },
+            { id: 59, text: 'Is there a map or a list of solar punk initiatives around the globe?, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/11w49f5/is_there_a_map_or_a_list_of_solar_punk/" target="_blank">Link</a>' },
+            { id: 60, text: 'Demand Utopia: A Solarpunk Podcast - Solarpunk Magazine, accessed July 16, 2025. <a href="https://solarpunkmagazine.com/solarpunk-futures-podcasts/" target="_blank">Link</a>' },
+            { id: 61, text: 'Solarpunk Now! - the podcast demanding a brighter future, accessed July 16, 2025. <a href="https://www.solarpunkcast.net/" target="_blank">Link</a>' },
+            { id: 62, text: 'solarpunk hacker - Story Seed Library - alxd, accessed July 16, 2025. <a href="https://alxd.org/story-seed-library.html" target="_blank">Link</a>' },
+            { id: 63, text: 'Local Currency Models - Schumacher Center for a New Economics, accessed July 16, 2025. <a href="https://centerforneweconomics.org/apply/local-currencies-program/local-currency-models/" target="_blank">Link</a>' },
+            { id: 64, text: 'Create Your Own Solarpunk, Post-Capitalist, Regenerative Economy Instead - YouTube, accessed July 16, 2025. <a href="https://www.youtube.com/watch?v=sINcc9DqlHw" target="_blank">Link</a>' },
+            { id: 65, text: 'Meat Utopia - A Solarpunk Exhibition - iHeartBerlin.de, accessed July 16, 2025. <a href="https://www.iheartberlin.de/events/meat-utopia-a-solarpunk-exhibition/" target="_blank">Link</a>' },
+            { id: 66, text: 'MEAT UTOPIA. A Solarpunk Exhibition - P61 Gallery - ART at Berlin, accessed July 16, 2025. <a href="https://www.artatberlin.com/en/news-meat-utopia-a-solarpunk-exhibition-p61-gallery-22-09-08-10-2023/" target="_blank">Link</a>' },
+            { id: 67, text: 'SOLARPUNK, immersive transmedia exhibition - Gres art 671, accessed July 16, 2025. <a href="https://gresart671.org/en/activities/solarpunk-mostra" target="_blank">Link</a>' },
+            { id: 68, text: 'Solarpunk Movies - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/ondz67/solarpunk_movies/" target="_blank">Link</a>' },
+            { id: 69, text: 'Solarpunk Movies | Solarpunk Cities, accessed July 16, 2025. <a href="https://solarpunkcities.com/arts/movies/" target="_blank">Link</a>' },
+            { id: 70, text: 'Solarpunk Media - art // ideas // text, accessed July 16, 2025. <a href="https://helensouth.com/solarpunk-media/" target="_blank">Link</a>' },
+            { id: 71, text: 'The Solarpunk Scene - YouTube, accessed July 16, 2025. <a href="https://www.youtube.com/c/TheSolarpunkScene" target="_blank">Link</a>' },
+            { id: 72, text: 'Solarpunk Life - YouTube, accessed July 16, 2025. <a href="https://www.youtube.com/c/SolarpunkLife" target="_blank">Link</a>' },
+            { id: 73, text: 'Crowdsourced Solarpunk Terms - Reddit, accessed July 16, 2025. <a href="https://www.reddit.com/r/solarpunk/comments/16r8j0f/crowdsourced_solarpunk_terms/" target="_blank">Link</a>' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DOM ELEMENT SELECTORS ---
+            const contentContainer = document.getElementById('content-container');
+            const langToggle = document.getElementById('lang-toggle');
+            const langToggleMobile = document.getElementById('lang-toggle-mobile');
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const toTopButton = document.getElementById('to-top-button');
+            const htmlEl = document.documentElement;
+
+            // --- STATE MANAGEMENT ---
+            let currentLang = 'en';
+            let currentTheme = localStorage.getItem('theme') || 'auto';
+
+            // --- THEME SWITCHING LOGIC ---
+            const lightIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+            const darkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+            const autoIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+
+            const applyTheme = (theme) => {
+                if (theme === 'light') {
+                    htmlEl.classList.add('light');
+                    htmlEl.classList.remove('dark');
+                    themeToggle.innerHTML = themeToggleMobile.innerHTML = lightIcon;
+                } else if (theme === 'dark') {
+                    htmlEl.classList.add('dark');
+                    htmlEl.classList.remove('light');
+                    themeToggle.innerHTML = themeToggleMobile.innerHTML = darkIcon;
+                } else { // Auto
+                    htmlEl.classList.remove('light', 'dark');
+                    themeToggle.innerHTML = themeToggleMobile.innerHTML = autoIcon;
+                }
+                localStorage.setItem('theme', theme);
+                currentTheme = theme;
+            };
+
+            const cycleTheme = () => {
+                const themes = ['light', 'dark', 'auto'];
+                const currentIndex = themes.indexOf(currentTheme);
+                const nextIndex = (currentIndex + 1) % themes.length;
+                applyTheme(themes[nextIndex]);
+            };
+
+            // Listen for OS theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (currentTheme === 'auto') {
+                    applyTheme('auto'); // Re-apply auto to reflect change
+                }
+            });
+            
+            themeToggle.addEventListener('click', cycleTheme);
+            themeToggleMobile.addEventListener('click', cycleTheme);
+
+            // --- CONTENT RENDERING & LANGUAGE LOGIC ---
+            function renderContent(lang) {
+                document.querySelectorAll('[data-lang-key]').forEach(el => {
+                    const key = el.getAttribute('data-lang-key');
+                    if (langData[lang][key]) el.innerHTML = langData[lang][key];
+                });
+
+                contentContainer.innerHTML = '';
+                const sections = ['summary', 'part1', 'part2', 'part3', 'part4', 'part5', 'part6', 'conclusion', 'references'];
+                sections.forEach(key => {
+                    if (!contentData[key] || !contentData[key][lang]) return;
+                    const data = contentData[key][lang];
+                    const section = document.createElement('section');
+                    section.id = key;
+                    section.className = 'glass-card p-6 md:p-10 scroll-mt-28';
+                    section.innerHTML = `
+                        <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-accent mb-6 border-b-2 border-accent/30 pb-3">${data.title}</h2>
+                        <div class="prose max-w-none">${data.content}</div>`;
+                    contentContainer.appendChild(section);
+                });
+
+                const referencesList = document.getElementById('references-list');
+                if(referencesList) {
+                    referencesList.innerHTML = '';
+                    referencesData.forEach(ref => {
+                        const li = document.createElement('li');
+                        li.id = `ref-${ref.id}`;
+                        li.innerHTML = ref.text;
+                        referencesList.appendChild(li);
+                    });
+                }
+                observeSections();
+            }
+
+            function toggleLanguage() {
+                currentLang = currentLang === 'en' ? 'es' : 'en';
+                langToggle.textContent = currentLang === 'en' ? 'ES' : 'EN';
+                langToggleMobile.textContent = currentLang === 'en' ? 'ES' : 'EN';
+                renderContent(currentLang);
+            }
+
+            langToggle.addEventListener('click', toggleLanguage);
+            langToggleMobile.addEventListener('click', toggleLanguage);
+
+            // --- UI & SCROLL BEHAVIORS ---
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            document.querySelectorAll('#mobile-menu a, .nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (link.closest('#mobile-menu')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                    if(link.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        if(targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+
+            window.addEventListener('scroll', () => {
+                toTopButton.classList.toggle('hidden', window.pageYOffset <= 300);
+            });
+            toTopButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+            // --- INTERSECTION OBSERVER FOR NAV HIGHLIGHTING ---
+            let observer;
+            function observeSections() {
+                if (observer) observer.disconnect();
+                const navLinks = document.querySelectorAll('.nav-link');
+                const options = { rootMargin: "-40% 0px -60% 0px" };
+                observer = new IntersectionObserver((entries) => {
+                    let intersectingId = null;
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            intersectingId = entry.target.getAttribute('id');
+                        }
+                    });
+                    
+                    navLinks.forEach(link => {
+                        const href = link.getAttribute('href');
+                        // Special case for home
+                        if (href === '#home') {
+                            link.classList.toggle('active', window.scrollY < window.innerHeight / 2);
+                        } else {
+                           link.classList.toggle('active', href === `#${intersectingId}`);
+                        }
+                    });
+
+                }, options);
+                document.querySelectorAll('main section').forEach(section => observer.observe(section));
+            }
+
+            // --- INITIALIZATION ---
+            applyTheme(currentTheme);
+            renderContent(currentLang);
+        });
+    </script>
+</body>
+</html>
