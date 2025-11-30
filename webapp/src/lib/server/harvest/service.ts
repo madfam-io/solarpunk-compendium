@@ -5,8 +5,12 @@
  */
 
 import { db } from '../db';
-import type { HarvestSource, HarvestItem, SourceType } from '@prisma/client';
-import type { HarvestResult, HarvestSourceData, NormalizedProject } from './types';
+import type { HarvestResult, HarvestSourceData, NormalizedProject, SourceType } from './types';
+
+// These types will come from @prisma/client when generated
+// For now, using the DB result types directly
+type HarvestSource = Awaited<ReturnType<typeof db.harvestSource.findFirst>>;
+type HarvestItem = Awaited<ReturnType<typeof db.harvestItem.findFirst>>;
 import { harvestRss } from './harvesters/rss';
 import { harvestManual } from './harvesters/manual';
 import { generateSlug } from './normalize';
@@ -368,12 +372,15 @@ export async function getQueueStats() {
 
 	return {
 		totals: { pending, approved, rejected, published, total },
-		bySource: sources.map((s) => ({
+		bySource: sources.map((s: { id: string; name: string; slug: string; lastHarvest: Date | null }) => ({
 			...s,
 			counts: bySource
-				.filter((b) => b.sourceId === s.id)
+				.filter((b: { sourceId: string; status: string; _count: number }) => b.sourceId === s.id)
 				.reduce(
-					(acc, b) => ({ ...acc, [b.status.toLowerCase()]: b._count }),
+					(acc: Record<string, number>, b: { status: string; _count: number }) => ({
+						...acc,
+						[b.status.toLowerCase()]: b._count
+					}),
 					{} as Record<string, number>
 				)
 		}))

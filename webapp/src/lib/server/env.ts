@@ -6,6 +6,7 @@
  */
 
 import { env } from '$env/dynamic/private';
+import { building } from '$app/environment';
 
 export const config = {
 	// Janua Authentication
@@ -41,8 +42,8 @@ export const config = {
 	}
 };
 
-// Validate required variables in production
-if (config.app.env === 'production') {
+// Validate required variables in production (skip during build)
+if (!building && config.app.env === 'production') {
 	const required = ['DATABASE_URL', 'JANUA_API_URL', 'JANUA_API_SECRET'];
 
 	for (const key of required) {

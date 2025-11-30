@@ -45,7 +45,7 @@ export const load: PageServerLoad = async (event) => {
 	]);
 
 	return {
-		items: items.map((item) => ({
+		items: items.map((item: typeof items[number]) => ({
 			...item,
 			rawData: undefined, // Don't send raw data to client
 			normalized: item.normalized as Record<string, unknown>

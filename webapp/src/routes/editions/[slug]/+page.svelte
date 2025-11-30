@@ -2,21 +2,23 @@
 	import SEO from '$lib/components/SEO.svelte';
 	import { CodexProvider, ModeToggle } from '$lib/codex';
 	import { getSeasonInfo } from '$lib/codex/utils/season';
+	import type { PageData } from './$types';
 
-	export let data;
+	export let data: PageData;
 
 	$: ({ edition, articles } = data);
 	$: seasonInfo = getSeasonInfo(edition.season as 'winter' | 'spring' | 'summer' | 'autumn');
 
+	type Article = typeof articles[number];
 	// Group articles by section
 	$: articlesBySection = articles.reduce(
-		(acc, article) => {
+		(acc: Record<string, Article[]>, article: Article) => {
 			const section = article.section || 'Features';
 			if (!acc[section]) acc[section] = [];
 			acc[section].push(article);
 			return acc;
 		},
-		{} as Record<string, typeof articles>
+		{} as Record<string, Article[]>
 	);
 
 	$: sections = Object.keys(articlesBySection);

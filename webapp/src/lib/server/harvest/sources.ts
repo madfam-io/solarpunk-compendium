@@ -4,8 +4,7 @@
  * Pre-configured sources for initial content seeding
  */
 
-import type { SourceType } from '@prisma/client';
-import type { SourceConfig, FieldMapping } from './types';
+import type { SourceType, SourceConfig, FieldMapping } from './types';
 
 export interface SourceDefinition {
 	slug: string;

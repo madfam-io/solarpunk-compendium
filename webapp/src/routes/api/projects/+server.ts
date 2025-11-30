@@ -110,7 +110,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		]);
 
 		// Transform response
-		const data = projects.map((p) => ({
+		const data = projects.map((p: typeof projects[number]) => ({
 			id: p.id,
 			slug: p.slug,
 			name: p.name,
@@ -118,8 +118,8 @@ export const GET: RequestHandler = async ({ url }) => {
 			location: p.location,
 			coverImage: p.coverImage,
 			featured: p.featured,
-			categories: p.categories.map((c) => c.category.name),
-			sdgs: p.sdgs.map((s) => s.sdgId),
+			categories: p.categories.map((c: typeof p.categories[number]) => c.category.name),
+			sdgs: p.sdgs.map((s: typeof p.sdgs[number]) => s.sdgId),
 			submittedBy: p.submittedBy
 		}));
 
@@ -134,7 +134,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		});
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			throw error(400, { message: 'Invalid query parameters', errors: err.errors });
+			throw error(400, `Invalid query parameters: ${err.errors.map((e) => e.message).join(', ')}`);
 		}
 		console.error('Error fetching projects:', err);
 		throw error(500, 'Failed to fetch projects');
@@ -219,7 +219,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return json({ data: project }, { status: 201 });
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			throw error(400, { message: 'Invalid project data', errors: err.errors });
+			throw error(400, `Invalid project data: ${err.errors.map((e) => e.message).join(', ')}`);
 		}
 		console.error('Error creating project:', err);
 		throw error(500, 'Failed to create project');

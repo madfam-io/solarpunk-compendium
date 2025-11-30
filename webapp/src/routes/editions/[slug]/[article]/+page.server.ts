@@ -51,7 +51,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		}
 	});
 
-	const currentIndex = allArticles.findIndex((a) => a.id === article.id);
+	const currentIndex = allArticles.findIndex((a: typeof allArticles[number]) => a.id === article.id);
 	const prevArticle = currentIndex > 0 ? allArticles[currentIndex - 1] : null;
 	const nextArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
 

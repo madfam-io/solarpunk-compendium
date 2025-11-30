@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
-	import type { ReadingMode } from './CodexProvider.svelte';
+	import type { ReadingMode } from '../types';
 
 	// Props
 	export let number: number | undefined = undefined;

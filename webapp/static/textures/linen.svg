@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <defs>
+    <pattern id="linen-weave" patternUnits="userSpaceOnUse" width="6" height="6">
+      <!-- Horizontal threads -->
+      <line x1="0" y1="1" x2="6" y2="1" stroke="rgba(120,100,80,0.04)" stroke-width="0.8"/>
+      <line x1="0" y1="3" x2="6" y2="3" stroke="rgba(120,100,80,0.03)" stroke-width="0.6"/>
+      <line x1="0" y1="5" x2="6" y2="5" stroke="rgba(120,100,80,0.035)" stroke-width="0.7"/>
+      <!-- Vertical threads -->
+      <line x1="1" y1="0" x2="1" y2="6" stroke="rgba(120,100,80,0.03)" stroke-width="0.6"/>
+      <line x1="3" y1="0" x2="3" y2="6" stroke="rgba(120,100,80,0.025)" stroke-width="0.5"/>
+      <line x1="5" y1="0" x2="5" y2="6" stroke="rgba(120,100,80,0.035)" stroke-width="0.7"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#linen-weave)"/>
+</svg>

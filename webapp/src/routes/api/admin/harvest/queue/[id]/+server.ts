@@ -8,7 +8,7 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import { requireAdmin } from '$lib/server/admin';
-import type { HarvestStatus } from '@prisma/client';
+import type { HarvestStatus } from '$lib/server/harvest/types';
 
 // GET /api/admin/harvest/queue/[id] - Get single item
 export const GET: RequestHandler = async (event) => {

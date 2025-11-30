@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
+	import type { PageData } from './$types';
 
-	export let data;
+	export let data: PageData;
 
 	$: ({ items, pagination, sources, stats, filters } = data);
 
@@ -49,7 +50,7 @@
 		if (selectedItems.length === items.length) {
 			selectedItems = [];
 		} else {
-			selectedItems = items.map((i) => i.id);
+			selectedItems = items.map((i: typeof items[number]) => i.id);
 		}
 	}
 

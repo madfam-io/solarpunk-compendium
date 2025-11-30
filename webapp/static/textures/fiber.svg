@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <defs>
+    <pattern id="fiber-pattern" patternUnits="userSpaceOnUse" width="20" height="20">
+      <path d="M0 10 Q5 8 10 10 T20 10" stroke="rgba(139,119,101,0.03)" stroke-width="0.5" fill="none"/>
+      <path d="M0 5 Q5 3 10 5 T20 5" stroke="rgba(139,119,101,0.02)" stroke-width="0.3" fill="none"/>
+      <path d="M0 15 Q5 17 10 15 T20 15" stroke="rgba(139,119,101,0.025)" stroke-width="0.4" fill="none"/>
+      <path d="M5 0 Q3 5 5 10 T5 20" stroke="rgba(139,119,101,0.02)" stroke-width="0.3" fill="none"/>
+      <path d="M15 0 Q17 5 15 10 T15 20" stroke="rgba(139,119,101,0.015)" stroke-width="0.25" fill="none"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#fiber-pattern)"/>
+</svg>

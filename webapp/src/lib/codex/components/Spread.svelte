@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext, createEventDispatcher } from 'svelte';
 	import type { Writable } from 'svelte/store';
-	import type { ReadingMode } from './CodexProvider.svelte';
+	import type { ReadingMode } from '../types';
 
 	const dispatch = createEventDispatcher<{
 		pageChange: { page: number; direction: 'next' | 'prev' };

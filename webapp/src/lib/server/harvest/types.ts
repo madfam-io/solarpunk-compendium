@@ -4,7 +4,11 @@
  * Types for the content harvesting system
  */
 
-import type { SourceType, ContentType, HarvestStatus } from '@prisma/client';
+// These types mirror the Prisma schema enums
+// When @prisma/client is generated, these can be imported from there instead
+export type SourceType = 'RSS' | 'API' | 'SCRAPE' | 'SOCIAL' | 'FORM' | 'MANUAL' | 'IMPORT';
+export type ContentType = 'PROJECT' | 'ARTICLE' | 'EVENT' | 'RESOURCE';
+export type HarvestStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'PUBLISHED' | 'DUPLICATE' | 'NEEDS_INFO';
 
 // Normalized project data structure
 export interface NormalizedProject {

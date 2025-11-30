@@ -62,9 +62,9 @@ export const GET: RequestHandler = async ({ params }) => {
 	return json({
 		data: {
 			...project,
-			categories: project.categories.map((c) => c.category),
-			sdgs: project.sdgs.map((s) => s.sdg),
-			tags: project.tags.map((t) => t.tag.name)
+			categories: project.categories.map((c: typeof project.categories[number]) => c.category),
+			sdgs: project.sdgs.map((s: typeof project.sdgs[number]) => s.sdg),
+			tags: project.tags.map((t: typeof project.tags[number]) => t.tag.name)
 		}
 	});
 };
@@ -143,7 +143,7 @@ export const PUT: RequestHandler = async ({ params, request, locals }) => {
 		return json({ data: updated });
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			throw error(400, { message: 'Invalid update data', errors: err.errors });
+			throw error(400, `Invalid update data: ${err.errors.map((e) => e.message).join(', ')}`);
 		}
 		console.error('Error updating project:', err);
 		throw error(500, 'Failed to update project');

@@ -36,6 +36,7 @@
 export { default as CodexProvider } from './components/CodexProvider.svelte';
 export { default as Page } from './components/Page.svelte';
 export { default as Spread } from './components/Spread.svelte';
+export { default as ArticleReader } from './components/ArticleReader.svelte';
 
 // Navigation & Controls
 export { default as ModeToggle } from './components/ModeToggle.svelte';
@@ -47,8 +48,18 @@ export { default as SectionDivider } from './components/SectionDivider.svelte';
 export { default as MarginNote } from './components/MarginNote.svelte';
 
 // Types
-export type { ReadingMode, Season, CodexContext } from './components/CodexProvider.svelte';
+export type { ReadingMode, Season, CodexContext } from './types';
 
 // Utilities
 export { getCurrentSeason, getSeasonFromDate, getSeasonInfo, seasons } from './utils/season';
 export type { SeasonName, SeasonInfo } from './utils/season';
+
+// Markdown utilities
+export {
+	parseMarkdown,
+	parseInline,
+	blocksToHtml,
+	estimateReadingTime,
+	extractExcerpt
+} from './utils/markdown';
+export type { ContentBlock } from './utils/markdown';

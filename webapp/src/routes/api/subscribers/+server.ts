@@ -7,6 +7,7 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
+import { janua, type JanuaError } from '$lib/janua';
 import { z } from 'zod';
 
 const subscribeSchema = z.object({
@@ -14,6 +15,20 @@ const subscribeSchema = z.object({
 	name: z.string().max(100).optional(),
 	source: z.string().max(50).optional()
 });
+
+/**
+ * Send welcome email via Janua's email service
+ * Fails gracefully - subscription succeeds even if email fails
+ */
+async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
+	try {
+		await janua.email.sendWelcome({ email, name });
+	} catch (err) {
+		// Log but don't fail the subscription if email fails
+		const januaError = err as JanuaError;
+		console.error('Failed to send welcome email:', januaError.message || err);
+	}
+}
 
 /**
  * POST /api/subscribers
@@ -36,6 +51,8 @@ export const POST: RequestHandler = async ({ request }) => {
 					where: { email: data.email },
 					data: { unsubscribed: false, subscribedAt: new Date() }
 				});
+				// Send welcome back email
+				await sendWelcomeEmail(data.email, data.name || existing.name || undefined);
 				return json({ message: 'Welcome back! You have been re-subscribed.' });
 			}
 			return json({ message: 'You are already subscribed!' });
@@ -50,8 +67,8 @@ export const POST: RequestHandler = async ({ request }) => {
 			}
 		});
 
-		// TODO: Send welcome email via Resend
-		// await sendWelcomeEmail(data.email, data.name);
+		// Send welcome email via Janua
+		await sendWelcomeEmail(data.email, data.name);
 
 		return json({ message: 'Thanks for subscribing! Check your inbox for a welcome email.' }, { status: 201 });
 	} catch (err) {

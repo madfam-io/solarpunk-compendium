@@ -75,7 +75,7 @@ export const load: PageServerLoad = async ({ url }) => {
 	]);
 
 	// Transform data for the frontend
-	const transformedProjects = projects.map((p) => ({
+	const transformedProjects = projects.map((p: typeof projects[number]) => ({
 		id: p.id,
 		slug: p.slug,
 		name: p.name,
@@ -83,11 +83,11 @@ export const load: PageServerLoad = async ({ url }) => {
 		location: p.location,
 		coverImage: p.coverImage,
 		featured: p.featured,
-		categories: p.categories.map((c) => c.category.name),
-		sdgs: p.sdgs.map((s) => s.sdg.number)
+		categories: p.categories.map((c: typeof p.categories[number]) => c.category.name),
+		sdgs: p.sdgs.map((s: typeof p.sdgs[number]) => s.sdg.id)
 	}));
 
-	const transformedCategories = categories.map((c) => ({
+	const transformedCategories = categories.map((c: typeof categories[number]) => ({
 		slug: c.slug,
 		name: c.name,
 		icon: c.icon,
