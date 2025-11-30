@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
-	import type { ReadingMode } from './CodexProvider.svelte';
+	import type { ReadingMode } from '../types';
 
 	// Get context
 	const context = getContext<{

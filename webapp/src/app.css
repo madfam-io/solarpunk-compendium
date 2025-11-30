@@ -3,13 +3,11 @@
    Skeuomorphic tokens for the reading experience
    ═══════════════════════════════════════════════════════════════ */
 @import '$lib/codex/styles/tokens.css';
+@import '$lib/codex/styles/typography.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Codex Typography (after Tailwind for proper cascade) */
-@import '$lib/codex/styles/typography.css';
 
 @layer base {
 	:root {

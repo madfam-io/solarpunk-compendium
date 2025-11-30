@@ -1,13 +1,6 @@
 <script lang="ts">
 	import SEO from '$lib/components/SEO.svelte';
-	import {
-		CodexProvider,
-		Page,
-		ModeToggle,
-		Bookmark,
-		PullQuote,
-		SectionDivider
-	} from '$lib/codex';
+	import { CodexProvider, ModeToggle, ArticleReader, parseMarkdown } from '$lib/codex';
 	import { getSeasonInfo } from '$lib/codex/utils/season';
 	import { browser } from '$app/environment';
 
@@ -40,44 +33,8 @@
 		isBookmarked = event.detail.saved;
 	}
 
-	// Parse markdown-ish content into sections
-	// This is a simple parser - in production you'd use a proper markdown parser
-	function parseContent(content: string) {
-		if (!content) return [];
-
-		// Split by double newlines for paragraphs
-		const blocks = content.split(/\n\n+/);
-
-		return blocks.map((block) => {
-			const trimmed = block.trim();
-
-			// Check for headers
-			if (trimmed.startsWith('# ')) {
-				return { type: 'h1', content: trimmed.slice(2) };
-			}
-			if (trimmed.startsWith('## ')) {
-				return { type: 'h2', content: trimmed.slice(3) };
-			}
-			if (trimmed.startsWith('### ')) {
-				return { type: 'h3', content: trimmed.slice(4) };
-			}
-
-			// Check for blockquote
-			if (trimmed.startsWith('> ')) {
-				return { type: 'quote', content: trimmed.slice(2) };
-			}
-
-			// Check for horizontal rule / section break
-			if (trimmed === '---' || trimmed === '***') {
-				return { type: 'divider', content: '' };
-			}
-
-			// Default to paragraph
-			return { type: 'p', content: trimmed };
-		});
-	}
-
-	$: contentBlocks = parseContent(article.content || '');
+	// Parse markdown content using the Codex parser
+	$: contentBlocks = parseMarkdown(article.content || '');
 </script>
 
 <SEO
@@ -147,39 +104,14 @@
 		{/if}
 
 		<!-- Article Body -->
-		<Page>
-			<Bookmark
-				saved={isBookmarked}
-				style="ribbon"
-				on:toggle={handleBookmarkToggle}
-			/>
-
-			<div class="codex-prose">
-				{#each contentBlocks as block, index}
-					{#if block.type === 'h1'}
-						<h1>{block.content}</h1>
-					{:else if block.type === 'h2'}
-						<h2>{block.content}</h2>
-					{:else if block.type === 'h3'}
-						<h3>{block.content}</h3>
-					{:else if block.type === 'quote'}
-						<PullQuote>
-							{block.content}
-						</PullQuote>
-					{:else if block.type === 'divider'}
-						<SectionDivider style="flourish" />
-					{:else}
-						<p>{block.content}</p>
-					{/if}
-				{/each}
-
-				{#if !article.content}
-					<p class="codex-article__placeholder">
-						This article is coming soon. Check back after the {seasonInfo.displayName} {edition.year} launch!
-					</p>
-				{/if}
-			</div>
-		</Page>
+		<ArticleReader
+			{contentBlocks}
+			{isBookmarked}
+			{seasonInfo}
+			editionYear={edition.year}
+			hasContent={!!article.content}
+			on:bookmarkToggle={handleBookmarkToggle}
+		/>
 
 		<!-- Article Navigation -->
 		<nav class="codex-article__nav">
@@ -326,55 +258,6 @@
 		height: auto;
 		border-radius: var(--codex-radius-soft);
 		box-shadow: var(--codex-shadow-lifted);
-	}
-
-	/* Prose Content */
-	.codex-prose {
-		font-family: var(--codex-font-body);
-		font-size: var(--codex-text-lg);
-		line-height: var(--codex-leading-loose);
-		color: var(--codex-ink-black);
-	}
-
-	.codex-prose h1,
-	.codex-prose h2,
-	.codex-prose h3 {
-		font-family: var(--codex-font-display);
-		color: var(--codex-ink-black);
-		margin-top: 2em;
-		margin-bottom: 0.5em;
-	}
-
-	.codex-prose h1 {
-		font-size: var(--codex-text-3xl);
-	}
-
-	.codex-prose h2 {
-		font-size: var(--codex-text-2xl);
-	}
-
-	.codex-prose h3 {
-		font-size: var(--codex-text-xl);
-	}
-
-	.codex-prose p {
-		margin-bottom: 1.5em;
-	}
-
-	.codex-prose p:first-of-type::first-letter {
-		float: left;
-		font-family: var(--codex-font-display);
-		font-size: 3.5em;
-		line-height: 0.8;
-		padding-right: 0.1em;
-		color: var(--codex-accent);
-	}
-
-	.codex-article__placeholder {
-		text-align: center;
-		padding: 4rem 2rem;
-		color: var(--codex-ink-muted);
-		font-style: italic;
 	}
 
 	/* Navigation */

@@ -1,22 +1,8 @@
-<script lang="ts" context="module">
-	export type ReadingMode = 'flow' | 'codex' | 'focus';
-	export type Season = 'winter' | 'spring' | 'summer' | 'autumn' | 'auto';
-
-	export interface CodexContext {
-		mode: ReadingMode;
-		season: Season;
-		resolvedSeason: Exclude<Season, 'auto'>;
-		sounds: boolean;
-		setMode: (mode: ReadingMode) => void;
-		setSeason: (season: Season) => void;
-		toggleSounds: () => void;
-	}
-</script>
-
 <script lang="ts">
 	import { setContext, onMount } from 'svelte';
 	import { writable, derived } from 'svelte/store';
 	import { browser } from '$app/environment';
+	import type { ReadingMode, Season, CodexContext } from '../types';
 
 	// Props - season accepts string for flexibility with server data
 	export let mode: ReadingMode = 'flow';
