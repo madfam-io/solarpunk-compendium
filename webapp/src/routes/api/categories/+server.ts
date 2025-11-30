@@ -26,7 +26,7 @@ export const GET: RequestHandler = async () => {
 		orderBy: { name: 'asc' }
 	});
 
-	const data = categories.map((c) => ({
+	const data = categories.map((c: typeof categories[number]) => ({
 		id: c.id,
 		slug: c.slug,
 		name: c.name,

@@ -42,7 +42,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		orderBy: [{ year: 'desc' }, { season: 'desc' }]
 	});
 
-	const data = editions.map((e) => ({
+	const data = editions.map((e: typeof editions[number]) => ({
 		id: e.id,
 		slug: e.slug,
 		title: e.title,
@@ -53,7 +53,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		coverImage: e.coverImage,
 		publishedAt: e.publishedAt,
 		articleCount: e._count.articles,
-		...(includeArticles && { articles: e.articles })
+		...(includeArticles && { articles: (e as typeof editions[number] & { articles?: unknown[] }).articles })
 	}));
 
 	return json({ data });

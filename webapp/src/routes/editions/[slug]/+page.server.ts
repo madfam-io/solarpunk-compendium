@@ -56,7 +56,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			coverImage: edition.coverImage,
 			publishedAt: edition.publishedAt?.toISOString() || null
 		},
-		articles: edition.articles.map((a) => ({
+		articles: edition.articles.map((a: typeof edition.articles[number]) => ({
 			...a,
 			publishedAt: a.publishedAt?.toISOString() || null
 		}))

@@ -24,7 +24,7 @@ export const load: PageServerLoad = async () => {
 	};
 
 	// Transform data for the frontend
-	const transformedEditions = editions.map((e) => ({
+	const transformedEditions = editions.map((e: typeof editions[number]) => ({
 		id: e.id,
 		slug: e.slug,
 		season: normalizeSeason(e.season),
